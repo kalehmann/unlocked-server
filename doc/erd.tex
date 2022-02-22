@@ -1,0 +1,89 @@
+\documentclass[border=10pt,convert]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes.multipart,shapes}
+\begin{document}
+\newcommand { \key }[1]{\underline{#1}}
+\begin{tikzpicture}[
+    auto,
+    node distance=1.5cm,
+    basic/.style={
+      align=left,
+      draw,
+      font=\itshape,
+      rectangle split,
+      rectangle split parts=2,
+      rectangle split part fill={purple!30,white},
+      minimum width=3cm,
+      text width=2.5cm,
+    },
+    relation/.style={
+      align=center,
+      diamond,
+      draw,
+      fill = red!10,
+      text centered,
+    }]
+  \node[basic] (user) {user
+    \nodepart{second}
+    \key{handle}\\
+    password\\
+    email\\
+    mobile
+  };
+  \node[relation, right = 3 of user] (rel_client_user) {manages};
+  \node[relation, below = 3 of user] (rel_key_user) {manages};
+  \node[relation, below right = of user] (rel_request_user) {can\\process};
+  \node[relation, left = of user] (rel_token_user) {has};
+
+  \node[basic, left = of rel_token_user] (token) {token
+    \nodepart{second}
+    \key{id}\\
+    token\\
+    user\_handle\\
+    expires\\
+    description\\
+    revoked
+  };
+
+  \node[basic, right = 3 of rel_client_user] (client) {client
+    \nodepart{second}
+    \key{handle}\\
+    secret\\
+    user\_handle\\
+    description\\
+    deleted
+  };
+
+  \node[basic, below right = of rel_request_user] (request) {request
+    \nodepart{second}
+    \key{id}\\
+    client\_handle\\
+    key\_handle\\
+    user\_handle\\
+    created\\
+    processed\\
+    state\\
+    expires
+  };
+
+  \node[basic, below = 3 of rel_key_user] (key) {key
+    \nodepart{second}
+    \key{handle}\\
+    key\\
+    user\_handle\\
+    description\\
+    deleted
+  };
+  \node[relation, below left = 1.5 and 0 of client] (rel_client_request) {has};
+  \node[relation, below left = -0.5 and 1 of request] (rel_key_request) {has};
+  \node[relation, right = 8.4 of key] (rel_client_key) {can\\request};
+
+  \draw (client) -- (rel_client_user) node[above,midway] {\(n\)} -- (user) node[above,midway] {1};
+  \draw (key) -- (rel_key_user) node[midway] {\(n\)} -- (user) node[midway] {1};
+  \draw (token) -- (rel_token_user) node[midway] {\(n\)} -- (user) node[midway] {1};
+  \draw (user) -- (rel_request_user) node[midway] {1} -- (request) node[midway] {\(n\)};
+  \draw (client) -- (rel_client_key) node[midway] {\(n\)} -- (key) node[midway] {\(m\)};
+  \draw (client) -- (rel_client_request) node[midway] {1} -- (request) node[midway] {\(n\)};
+  \draw (key) -- (rel_key_request) node[midway] {1} -- (request) node[midway] {\(n\)};
+\end{tikzpicture}
+\end{document}
