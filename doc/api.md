@@ -2,6 +2,8 @@
 
 This document describes the data stored and endpoints exposed by the
 unlocked server.
+In this document, a term enclosed in chevrons (`<` and `>`) is a placeholder
+describing the actual value in its place.
 
 ### Terminology
 
@@ -136,6 +138,7 @@ Request and response payload are always of type json.
     This endpoint is used by the [user][user] to list existing keys and create new keys.
 
     * `GET /keys` lists all keys of the [user][user].
+        Keys with `deleted` set to `true` will not appear in the response.
 
         | Response code   | Condition |
         |-----------------|-----------|
@@ -147,11 +150,11 @@ Request and response payload are always of type json.
         ```json
         [
           {
-            "id": 1,
+            "handle": "key-0001",
             "description": "This is a key"
           },
           {
-            "id": 2,
+            "handle": "key-0002",
             "description": "This is another key"
           }
         ]
@@ -162,15 +165,17 @@ Request and response payload are always of type json.
         The URL to the endpoint returning the new key will be supplied in the
         `Location` header.
 
-        | Response code   | Condition |
-        |-----------------|-----------|
-        | [code 201][201] | always    |
+        | Response code   | Condition                       |
+        |-----------------|---------------------------------|
+        | [code 201][201] | always                          |
+        | [code 400][400] | if the handle is already in use |
 
         <details>
         <summary>Example request payload</summary>
 
         ```json
         {
+          "handle": "key-0003",
           "description": "A new key",
           "key": "12345678"
         }
@@ -182,13 +187,13 @@ Request and response payload are always of type json.
 
         ```json
         {
-          "id": 1,
-          "description": "New key"
+          "handle": "key-0003",
+          "description": "A new key"
         }
         ```
         </details>
 
-* `/keys/<key-id>`
+* `/keys/<key-handle>`
 
     | Used by      | Allowed methods          |
     |--------------|--------------------------|
@@ -196,12 +201,13 @@ Request and response payload are always of type json.
 
     This endpoint is used by the [user][user] to view, update or delete keys.
 
-    * `GET /keys/<key-id>` lists _all_ details of a key.
+    * `GET /keys/<key-handle>` lists the details of a key including the attribute
+        `deleted`.
 
-        | Response code   | Condition                                         |
-        |-----------------|---------------------------------------------------|
-        | [code 200][200] | Key exists and belongs to the user                |
-        | [code 404][404] | Key does not exist or is inaccessible by the user |
+        | Response code   | Condition                                  |
+        |-----------------|--------------------------------------------|
+        | [code 200][200] | Key exists and belongs to the [user][user] |
+        | [code 404][404] | Key does not exist or is inaccessible      |
 
         <details>
         <summary>Example response payload</summary>
@@ -215,13 +221,13 @@ Request and response payload are always of type json.
         ```
         </details>
 
-    * `DELETE /keys/<key-id>` deletes a key.
+    * `DELETE /keys/<key-handle>` deletes a key.
 
         | Response code   | Condition |
         |-----------------|-----------|
         | [code 204][204] | always    |
 
-    * `PATCH /keys/<key-id>` updates a key.
+    * `PATCH /keys/<key-handle>` updates a key.
         Only the value `description` can be updated.
 
         | Response code   | Condition                                         |
@@ -244,7 +250,7 @@ Request and response payload are always of type json.
 
         ```json
         {
-          "handle": "key-for-server-1",
+          "handle": "key-0003",
           "description": "New description",
           "deleted": false
         }
@@ -275,27 +281,35 @@ Request and response payload are always of type json.
       ```json
       [
         {
-          "id": 2,
-          "client": 1,
-          "key": 1,
-          "processed": 1644361100,
+          "id": 3,
+          "client": "client-0002",
+          "key": "key-0002",
+          "processed": 1646562630,
           "state": "PENDING",
-          "timestamp": 1644361000
+          "timestamp": 1646562630
+        },
+        {
+          "id": 2,
+          "client": "client-0001",
+          "key": "key-0001",
+          "processed": 1646560800,
+          "state": "PENDING",
+          "timestamp": 1646560800
         },
         {
           "id": 1,
-          "client": 1,
-          "key": 1,
-          "processed": 1645571732,
+          "client": "client-0001",
+          "key": "key-0001",
+          "processed": 1646478000,
           "state": "ACCEPTED",
-          "timestamp": 1645571732
+          "timestamp": 1646474400
         }
       ]
       ```
       </details>
 
     * `GET /requests?state=<state>` list all requests with the state `<state>`,
-      where `<state>` is either `PENDING`, `ACCEPTED` or `DENIED`.
+      where `<state>` is either `PENDING`, `ACCEPTED`, `DENIED` or `FULFILLED`.
       The results are sorted by ascending date.
 
       | Response code   | Condition |
@@ -308,39 +322,58 @@ Request and response payload are always of type json.
       ```json
       [
         {
-          "id": 2,
-          "client": 1,
-          "key": 1,
-          "processed": 1644361100,
+          "id": 3,
+          "client": "client-0002",
+          "key": "key-0002",
+          "processed": 1646562630,
           "state": "PENDING",
-          "timestamp": 1644361000
+          "timestamp": 1646562630
         },
         {
-          "id": 1,
-          "client": 1,
-          "key": 1,
-          "processed": 1645571732,
+          "id": 2,
+          "client": "client-0001",
+          "key": "key-0001",
+          "processed": 1646560800,
           "state": "PENDING",
-          "timestamp": 1645571732
-        }
+          "timestamp": 1646560800
+        },
       ]
       ```
       </details>
 
-    * `POST /requests` is used by the [client][client] to request access to a key.
+    * `POST /requests` is used by the [client][client] to request access to a
+        key.
         Payload is of type json with the single key `key`.
+        The URL to the endpoint returning the new request will be supplied in
+        the `Location` header.
 
-        | Response code   | Condition                             |
-        |-----------------|---------------------------------------|
-        | [code 201][201] | On success                            |
-        | [code 409][409] | If no key with the given id was found |
+        | Response code   | Condition                                        |
+        |-----------------|--------------------------------------------------|
+        | [code 201][201] | on success                                       |
+        | [code 400][400] | no key with the [handle][handle] or inaccessible |
 
         <details>
         <summary>Example request payload</summary>
 
         ```json
         {
-          "key": 1
+          "key": "key-0001"
+        }
+        ```
+        </details>
+
+        <details>
+        <summary>Example response payload</summary>
+
+        ```json
+        {
+          "id": 3,
+          "client": "client-handle",
+          "key": "key-0001",
+          "processed": 1645571732,
+          "state": "PENDING",
+          "timestamp": 1645571732,
+          "fulfilled": false
         }
         ```
         </details>
