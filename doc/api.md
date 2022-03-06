@@ -60,12 +60,14 @@ The unlocked server stores the following data according to the following models:
     * a unique ID
     * the unique [handle][handle] of the client that requested the key
     * the unique [handle][handle] of the requested key
-    * the timestamp when the request was created
-    * the timestamp when the request has been processed (either permitted or
-        denied)
     * the status of the request (`PENDING` / `ACCEPTED` / `FULFILLED` /
-       `DENIED` / `EXPIRED`)
+        `DENIED` / `EXPIRED`)
     * the timestamp when the request expires
+    * the timestamp when the request was created
+    * the timestamp when the request has been processed (state changed from
+        `PENDING` to `ACCEPTED` or `EXPIRED`)
+    * the timestamp when the request has been fulfilled (state changed from
+        `ACCEPTED` to `FULFILLED`)
 * **tokens**: Tokens are used by different applications, for example mobile apps
     to authenticate against the unlocked server on behalf of the user.
     For each token the following information is stored:
@@ -284,25 +286,28 @@ Request and response payload are always of type json.
           "id": 3,
           "client": "client-0002",
           "key": "key-0002",
-          "processed": 1646562630,
           "state": "PENDING",
-          "timestamp": 1646562630
+          "created": 1646562630,
+          "processed": null,
+          "fulfilled": null
         },
         {
           "id": 2,
           "client": "client-0001",
           "key": "key-0001",
-          "processed": 1646560800,
-          "state": "PENDING",
-          "timestamp": 1646560800
+          "state": "ACCEPTED",
+          "created": 1646560800,
+          "processed": 1646561800,
+          "fulfilled": null
         },
         {
           "id": 1,
           "client": "client-0001",
           "key": "key-0001",
+          "state": "FULFILLED",
+          "created": 1646474400,
           "processed": 1646478000,
-          "state": "ACCEPTED",
-          "timestamp": 1646474400
+          "fulfilled": 1646478600
         }
       ]
       ```
@@ -325,17 +330,19 @@ Request and response payload are always of type json.
           "id": 3,
           "client": "client-0002",
           "key": "key-0002",
-          "processed": 1646562630,
           "state": "PENDING",
-          "timestamp": 1646562630
+          "created": 1646562630,
+          "processed": null,
+          "fulfilled": null
         },
         {
           "id": 2,
           "client": "client-0001",
           "key": "key-0001",
-          "processed": 1646560800,
           "state": "PENDING",
-          "timestamp": 1646560800
+          "created": 1646560800,
+          "processed": null,
+          "fulfilled": null
         },
       ]
       ```
@@ -370,10 +377,10 @@ Request and response payload are always of type json.
           "id": 3,
           "client": "client-handle",
           "key": "key-0001",
-          "processed": 1645571732,
           "state": "PENDING",
-          "timestamp": 1645571732,
-          "fulfilled": false
+          "created": 1645571732,
+          "processed": null,
+          "fulfilled": null
         }
         ```
         </details>
@@ -400,10 +407,10 @@ Request and response payload are always of type json.
           "id": 3,
           "client": "client-handle",
           "key": "key-handle",
-          "processed": 1645578732,
           "state": "ACCEPTED",
-          "timestamp": 1645571732,
-          "fulfilled": false
+          "created": 1645571732,
+          "processed": 1645578732,
+          "fulfilled": null
         }
         ```
         </details>
@@ -475,9 +482,10 @@ Request and response payload are always of type json.
           "id": 1,
           "client": "client-handle",
           "key": "key-handle",
-          "processed": 1645578732,
           "state": "ACCEPTED",
-          "timestamp": 1645571732
+          "created": 1645571732,
+          "processed": 1645578732,
+          "fulfilled": null
         }
         ```
         </details>
