@@ -7,5 +7,5 @@ to these keys after authorization by a user.
 
 ### Documentation
 
-* [API](docs/api.md)
-* [Security model](docs/security.md)
+* [API](doc/api.md)
+* [Security model](doc/security.md)
