@@ -16,6 +16,25 @@
       minimum width=3cm,
       text width=2.5cm,
     },
+    double dashed/.style={
+      dashed,
+      dash pattern = on 7pt off 7pt,
+      thick,
+      red!50,
+      postaction={
+          black,
+          dash phase = 7pt,
+          draw,
+      }
+    },
+    quantity/.style={
+      black,
+      circle,
+      draw,
+      fill = purple!30,
+      inner sep = 1pt,
+      solid,
+    },
     relation/.style={
       align=center,
       diamond,
@@ -78,12 +97,12 @@
   \node[relation, below left = -0.5 and 1 of request] (rel_key_request) {has};
   \node[relation, right = 8.4 of key] (rel_client_key) {can\\request};
 
-  \draw (client) -- (rel_client_user) node[above,midway] {\(n\)} -- (user) node[above,midway] {1};
-  \draw (key) -- (rel_key_user) node[midway] {\(n\)} -- (user) node[midway] {1};
-  \draw (token) -- (rel_token_user) node[midway] {\(n\)} -- (user) node[midway] {1};
-  \draw (user) -- (rel_request_user) node[midway] {1} -- (request) node[midway] {\(n\)};
-  \draw (client) -- (rel_client_key) node[midway] {\(n\)} -- (key) node[midway] {\(m\)};
-  \draw (client) -- (rel_client_request) node[midway] {1} -- (request) node[midway] {\(n\)};
-  \draw (key) -- (rel_key_request) node[midway] {1} -- (request) node[midway] {\(n\)};
+  \draw[double dashed] (client) -- (rel_client_user) node[above,midway,quantity] {\(n\)} -- (user) node[above,midway,quantity] {1};
+  \draw[double dashed] (key) -- (rel_key_user) node[midway,quantity] {\(n\)} -- (user) node[midway,quantity] {1};
+  \draw[double dashed] (token) -- (rel_token_user) node[midway,quantity] {\(n\)} -- (user) node[midway,quantity] {1};
+  \draw[double dashed] (user) -- (rel_request_user) node[midway,quantity] {1} -- (request) node[midway,quantity] {\(n\)};
+  \draw[double dashed] (client) -- (rel_client_key) node[midway,quantity] {\(n\)} -- (key) node[midway,quantity] {\(m\)};
+  \draw[double dashed] (client) -- (rel_client_request) node[midway,quantity] {1} -- (request) node[midway,quantity] {\(n\)};
+  \draw[double dashed] (key) -- (rel_key_request) node[midway,quantity] {1} -- (request) node[midway,quantity] {\(n\)};
 \end{tikzpicture}
 \end{document}
