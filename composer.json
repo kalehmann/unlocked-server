@@ -1,0 +1,22 @@
+{
+    "name": "kalehmann/unlocked-server",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Kalehmann\\UnlockedServer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Karsten Lehmann",
+            "email": "mail@kalehmann.de"
+        }
+    ],
+    "require": {},
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
+    }
+}
