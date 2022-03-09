@@ -128,6 +128,139 @@ This endpoint can be accessed by either providing HMAC or
 
 Request and response payload are always of type json.
 
+#### Client endpoint
+
+* `/clients`
+
+    | Used by      | Allowed methods |
+    |--------------|-----------------|
+    | [user][user] | `GET`, `POST`   |
+
+    This endpoint is used by the [user][user] to list existing [clients][client]
+    and create new [clients][client].
+
+    * `GET /clients` lists all [clients][clients] of the [user][user].
+        [Clients][client] with `deleted` set to `true` will not appear in
+        the response.
+
+        | Response code   | Condition |
+        |-----------------|-----------|
+        | [code 200][200] | always    |
+
+        <details>
+        <summary>Example response payload</summary>
+
+        ```json
+        [
+          {
+            "handle": "client-0001",
+            "description": "This is a client"
+          },
+          {
+            "handle": "client-0002",
+            "description": "This is another client"
+          }
+        ]
+        ```
+        </details>
+
+    * `POST /clients` creates a new [client][client].
+        The URL to the endpoint returning the new [client][client] will be
+        supplied in the `Location` header.
+
+        | Response code   | Condition                       |
+        |-----------------|---------------------------------|
+        | [code 201][201] | always                          |
+        | [code 400][400] | if the handle is already in use |
+
+        <details>
+        <summary>Example request payload</summary>
+
+        ```json
+        {
+          "handle": "client-0003",
+          "description": "A new client",
+          "secret": "12345678"
+        }
+        ```
+        </details>
+
+        <details>
+        <summary>Example response payload</summary>
+
+        ```json
+        {
+          "handle": "client-0003",
+          "description": "A new client"
+        }
+        ```
+        </details>
+
+* `/clients/<client-handle>`
+
+    | Used by      | Allowed methods          |
+    |--------------|--------------------------|
+    | [user][user] | `GET`, `DELETE`, `PATCH` |
+
+    This endpoint is used by the [user][user] to view, update or delete
+    [clients][client].
+
+    * `GET /clients/<client-handle>` lists the details of a [client][client]
+        including the attribute `deleted`.
+
+        | Response code   | Condition                                     |
+        |-----------------|-----------------------------------------------|
+        | [code 200][200] | Client exists and belongs to the [user][user] |
+        | [code 404][404] | Client does not exist or is inaccessible      |
+
+        <details>
+        <summary>Example response payload</summary>
+
+        ```json
+        {
+          "handle": "client-1",
+          "description": "This is a client",
+          "deleted": false
+        }
+        ```
+        </details>
+
+    * `DELETE /clients/<client-handle>` deletes a [client][client].
+
+        | Response code   | Condition |
+        |-----------------|-----------|
+        | [code 204][204] | always    |
+
+    * `PATCH /clients/<client-handle>` updates a [client][client].
+        Only the value `description` can be updated.
+
+        | Response code   | Condition                                |
+        |-----------------|------------------------------------------|
+        | [code 404][404] | Client does not exist or is inaccessible |
+        | [code 200][200] | On success                               |
+
+        <details>
+        <summary>Example request payload</summary>
+
+        ```json
+        {
+          "description": "New description"
+        }
+        ```
+        </details>
+
+        <details>
+        <summary>Example response payload</summary>
+
+        ```json
+        {
+          "handle": "client-3",
+          "description": "New description",
+          "deleted": false
+        }
+        ```
+        </details>
+
 #### Key endpoint
 
 * `/keys`
@@ -137,7 +270,8 @@ Request and response payload are always of type json.
     |--------------|-----------------|
     | [user][user] | `GET`, `POST`   |
 
-    This endpoint is used by the [user][user] to list existing keys and create new keys.
+    This endpoint is used by the [user][user] to list existing keys and create
+    new keys.
 
     * `GET /keys` lists all keys of the [user][user].
         Keys with `deleted` set to `true` will not appear in the response.
