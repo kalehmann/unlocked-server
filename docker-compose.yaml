@@ -15,4 +15,5 @@ services:
                 working_dir: "/application"
                 volumes:
                         - ".:/application"
+                        - "/application/var"
 ...
