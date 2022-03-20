@@ -1,0 +1,15 @@
+---
+on: "push"  # yamllint disable-line rule:truthy
+
+jobs:
+        static-analysis:
+                runs-on: "ubuntu-latest"
+                name: "PHPStan static analysis"
+                steps:
+                        - uses: "actions/checkout@v2"
+                        - uses: "php-actions/composer@v6"
+                        - uses: "php-actions/phpstan@master"
+                          with:
+                                  level: "max"
+                                  path: "public/ src/"
+...
