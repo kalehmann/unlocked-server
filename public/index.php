@@ -5,10 +5,8 @@ declare(strict_types=1);
 use KaLehmann\UnlockedServer\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 
-$loader = require __DIR__.'/../vendor/autoload.php';
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-$kernel = new Kernel('dev', true);
-$request = Request::createFromGlobals();
-$response = $kernel->handle($request);
-$response->send();
-$kernel->terminate($request, $response);
+return function (array $context) {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};
