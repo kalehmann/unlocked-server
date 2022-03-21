@@ -8,6 +8,9 @@ RUN wget -O - https://github.com/symfony-cli/symfony-cli/releases/download/v5.4.
     && cp -R /root/.symfony5 /home/www-data \
     && chown -R www-data:www-data /home/www-data
 
+ADD docker/php/install_composer.sh /install_composer.sh
+RUN sh /install_composer.sh && rm -f /install_composer.sh
+
 RUN mkdir -p /application/var \
     && chown -R www-data:www-data /application/var
 
