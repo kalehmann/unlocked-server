@@ -1,3 +1,5 @@
+---
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'
+...
