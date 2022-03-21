@@ -14,6 +14,9 @@ RUN sh /install_composer.sh && rm -f /install_composer.sh
 RUN mkdir -p /application/var \
     && chown -R www-data:www-data /application/var
 
+RUN mkdir -p /application/vendor \
+    && chown -R www-data:www-data /application/vendor
+
 USER www-data:www-data
 
 ENTRYPOINT ["/usr/local/bin/symfony"]

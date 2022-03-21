@@ -1,0 +1,100 @@
+---
+kind: "pipeline"
+type: "docker"
+name: "tests"
+workspace:
+        path: "/application"
+
+steps:
+        - name: "Fix permissions"
+          image: "registry.kalehmann.de/bash:latest"
+          commands:
+                  - "chmod -R 777 ."
+        - name: "Install the PHP dependencies"
+          image: "registry.kalehmann.de/testing/unlocked-server:latest"
+          commands:
+                  - "composer install"
+          depends_on:
+                  - "Fix permissions"
+        - name: "Static analysis of PHP code"
+          image: "registry.kalehmann.de/testing/unlocked-server:latest"
+          commands:
+                  - >-
+                        /usr/bin/env php -dmemory_limit=-1 vendor/bin/phpstan
+                        --level=max analyze public/ src/
+          depends_on:
+                  - "Install the PHP dependencies"
+        - name: "Style check of PHP code"
+          image: "registry.kalehmann.de/testing/unlocked-server:latest"
+          commands:
+                  - >-
+                        /usr/bin/env php vendor/bin/phpcs
+                        --standard=PSR12 public/ src/
+          depends_on:
+                  - "Install the PHP dependencies"
+
+image_pull_secrets:
+        - "dockerconfigjson"
+
+---
+kind: "pipeline"
+type: "docker"
+name: "deployment"
+depends_on:
+        - "tests"
+workspace:
+        path: "/application"
+
+steps:
+        - name: "Fix permissions"
+          image: "registry.kalehmann.de/bash:latest"
+          commands:
+                  - "chmod -R 777 ."
+        - name: "Install the PHP dependencies"
+          image: "registry.kalehmann.de/testing/unlocked-server:latest"
+          commands:
+                  - "composer install --no-dev --classmap-authoritative"
+          depends_on:
+                  - "Fix permissions"
+        - name: "Deploy the website"
+          image: "registry.kalehmann.de/lftp:latest"
+          commands:
+                  - 'echo "$${ENV_FILE}" | tr " " "\n" > .env'
+                  - 'lftp -e "
+                      set ftp:ssl-force true;
+                      set ssl:verify-certificate yes;
+                      open -u $${USER},$${PASSWORD} $${SERVER};
+                      mirror
+                        --delete
+                        --exclude=^.dockerignore
+                        --exclude=^.drone.yaml
+                        --exclude=^.git
+                        --exclude=^doc
+                        --exclude=^docker
+                        --exclude=^Dockerfile
+                        --exclude=^tests
+                        --parallel=20
+                        --reverse
+                        $(pwd)
+                        $${TARGET_DIRECTORY};
+                      exit;"'
+          depends_on:
+                  - "Install the PHP dependencies"
+          environment:
+                  ENV_FILE:
+                          from_secret: "env_file"
+                  USER:
+                          from_secret: "ftp_user"
+                  PASSWORD:
+                          from_secret: "ftp_password"
+                  SERVER:
+                          from_secret: "ftp_server"
+                  TARGET_DIRECTORY:
+                          from_secret: "target_directory"
+          when:
+                  branch:
+                          - "main"
+
+image_pull_secrets:
+        - "dockerconfigjson"
+...
