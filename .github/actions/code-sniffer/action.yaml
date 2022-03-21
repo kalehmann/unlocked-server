@@ -1,0 +1,18 @@
+---
+name: "PHP CodeSniffer"
+author: "Karsten Lehmann <mail@kalehmann.de>"
+description: "PHP coding style analysis"
+inputs:
+        source-directories:
+                description: "The directories containing the code"
+                required: true
+runs:
+        using: "docker"
+        image: "../../../Dockerfile"
+        entrypoint: "/bin/sh"
+        args:
+                - "-c"
+                - >-
+                        php vendor/bin/phpcs --standard=PSR12
+                        ${{ inputs.source-directories }}
+...

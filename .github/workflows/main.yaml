@@ -12,4 +12,15 @@ jobs:
                           with:
                                   level: "max"
                                   path: "public/ src/"
+        style-check:
+                runs-on: "ubuntu-latest"
+                name: "PHP CodeSniffer analysis"
+                steps:
+                        - uses: "actions/checkout@v2"
+                        - uses: "php-actions/composer@v6"
+                        - name: "PHP CodeSniffer analysis"
+                          uses: "./.github/actions/code-sniffer"
+                          with:
+                                  source-directories: >-
+                                          public/ src/
 ...
