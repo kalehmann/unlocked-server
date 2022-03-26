@@ -48,6 +48,8 @@ class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $c): void
     {
+        $c->import('../config/{packages}/*.yaml');
+        $c->import('../config/{packages}/' . $this->environment . '/*.yaml');
         // register all classes in /src/ as service
         $c->services()
             ->load('KaLehmann\\UnlockedServer\\', __DIR__ . '/*')
