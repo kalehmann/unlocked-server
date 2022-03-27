@@ -64,6 +64,7 @@ class ListDatabasesService
     public function getDatabases(): array
     {
         $connection = $this->getDefaultConnection();
+        /** @var array<string, string> $params */
         $params = $connection->getParams();
         $driver = $params['driver'] ?? null;
         if ($driver === 'pdo_sqlite') {
