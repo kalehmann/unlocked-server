@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class User
 {
     private string $email;
@@ -33,9 +36,12 @@ class User
 
     private string $password;
 
+    private Collection $tokens;
+
     public function __construct(string $handle)
     {
         $this->handle = $handle;
+        $this->tokens = new ArrayCollection();
     }
 
     public function getEmail(): string
@@ -71,5 +77,24 @@ class User
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    public function addToken(Token $token): void
+    {
+        if ($this->tokens->contains($token)) {
+            return;
+        }
+
+        $this->tokens->add($token);
+    }
+
+    public function getTokens(): Collection
+    {
+        return $this->tokens;
+    }
+
+    public function removeToken(Token $token): void
+    {
+        $this->tokens->removeElement($token);
     }
 }
