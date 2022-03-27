@@ -8,6 +8,14 @@ jobs:
                 steps:
                         - uses: "actions/checkout@v2"
                         - uses: "php-actions/composer@v6"
+                        - name: "Create .env file"
+                          run: |-
+                                  cat << EOF > .env
+                                  APP_ENV=test
+                                  APP_DEBUG=0
+                                  APP_SECRET=test
+                                  DB_URL=sqlite3:///test.db
+                                  EOF
                         - uses: "php-actions/phpstan@master"
                           with:
                                   level: "max"
