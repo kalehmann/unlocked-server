@@ -24,7 +24,8 @@ KaLehmann\UnlockedServer\Model\Key:
                 requests:
                         mappedBy: "key"
                         targetEntity: "Request"
-        repositoryClass: "KaLehmann\\UnlockedServer\\Repository\\KeyRepository"
+        repositoryClass: >-
+                KaLehmann\\UnlockedServer\\Repository\\KeyRepository
         table: "keys"
         type: "entity"
 ...

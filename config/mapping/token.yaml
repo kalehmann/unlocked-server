@@ -25,7 +25,8 @@ KaLehmann\UnlockedServer\Model\Token:
                                 name: "user_handle"
                                 referencedColumnName: "handle"
                         targetEntity: "User"
-        repositoryClass: "KaLehmann\\UnlockedServer\\Repository\\TokenRepository"
+        repositoryClass: >-
+                KaLehmann\\UnlockedServer\\Repository\\TokenRepository
         table: "tokens"
         type: "entity"
 ...

@@ -32,7 +32,8 @@ KaLehmann\UnlockedServer\Model\Request:
                                 name: "user_handle"
                                 referencedColumnName: "handle"
                         targetEntity: "User"
-        repositoryClass: "KaLehmann\\UnlockedServer\\Repository\\RequestRepository"
+        repositoryClass: >-
+                KaLehmann\\UnlockedServer\\Repository\\RequestRepository
         table: "requests"
         type: "entity"
 ...

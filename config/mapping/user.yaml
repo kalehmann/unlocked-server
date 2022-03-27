@@ -26,7 +26,8 @@ KaLehmann\UnlockedServer\Model\User:
                 tokens:
                         mappedBy: "user"
                         targetEntity: "Token"
-        repositoryClass: "KaLehmann\\UnlockedServer\\Repository\\UserRepository"
+        repositoryClass: >-
+                KaLehmann\\UnlockedServer\\Repository\\UserRepository
         table: "users"
         type: "entity"
 ...
