@@ -41,6 +41,7 @@ class Kernel extends BaseKernel
         $bundles = [
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new \Symfony\Bundle\MonologBundle\MonologBundle(),
         ];
 
         return $bundles;

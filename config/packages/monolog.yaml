@@ -1,0 +1,9 @@
+---
+monolog:
+        handlers:
+            main:
+                formatter: "monolog.formatter.json"
+                level: "debug"
+                path: "php://stdout"
+                type: "stream"
+...
