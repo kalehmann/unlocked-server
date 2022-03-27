@@ -1,4 +1,10 @@
 # Simple docker-compose stack for the development of the application
+#
+# - Services will run as non-root user.
+# - The source code is always mounted to /application
+# - No additional data will be shared with the host.
+#   Cache files, additional dependencies and log files will be stored in
+#   docker volumes.
 
 ---
 version: "3.9"
