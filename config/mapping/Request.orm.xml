@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="KaLehmann\UnlockedServer\Model\Request" table="requests">
+    <field
+        column="created"
+        name="created"
+        nullable="false"
+        type="integer" />
+    <field
+        column="expires"
+        name="expires"
+        nullable="false"
+        type="integer" />
+    <field
+        column="fulfilled"
+        name="fulfilled"
+        nullable="true"
+        type="integer" />
+    <field
+        column="processed"
+        name="processed"
+        nullable="true"
+        type="integer" />
+    <field
+        column="state"
+        name="state"
+        nullable="false"
+        type="string" />
+    <id
+        name="id"
+        type="integer"
+        column="id">
+      <generator
+          strategy="AUTO"/>
+    </id>
+    <many-to-one
+        field="client"
+        inversed-by="requests"
+        target-entity="Client">
+      <join-column  
+          name="client_handle"
+          referenced-column-name="handle" />
+    </many-to-one>
+    <many-to-one
+        field="key"
+        inversed-by="requests"
+        target-entity="Key">
+      <join-column
+          name="key_handle"
+          referenced-column-name="handle" />
+    </many-to-one>
+    <many-to-one
+        field="user"
+        inversed-by="requests"
+        target-entity="User">
+      <join-column
+          name="user_handle"
+          referenced-column-name="handle" />
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

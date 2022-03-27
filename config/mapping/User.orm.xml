@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity
+      name="KaLehmann\UnlockedServer\Model\User"
+      table="users">
+    <field
+        column="email"
+        name="email"
+        nullable="false"
+        type="string"
+        unique="true" />
+    <field
+        column="mobile"
+        name="mobile"
+        nullable="true"
+        type="string"
+        unique="true" />
+    <field
+        column="password"
+        name="password"
+        nullable="false"
+        type="string" />
+    <id
+        column="handle"
+        name="handle"
+        type="string" />
+    <one-to-many
+        field="clients"
+        inversedBy="user"
+        mapped-by="user"
+        target-entity="Client" />
+    <one-to-many
+        field="keys"
+        inversedBy="user"
+        mapped-by="user"
+        target-entity="Key" />
+    <one-to-many
+        field="requests"
+        mapped-by="user"
+        target-entity="Request" />
+    <one-to-many
+        field="tokens"
+        mapped-by="user"
+        target-entity="Token" />
+  </entity>
+</doctrine-mapping>

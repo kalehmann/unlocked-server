@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity
+      name="KaLehmann\UnlockedServer\Model\Token"
+      table="tokens">
+    <field
+        column="description"
+        name="description"
+        nullable="false"
+        type="string" />
+    <field
+        column="expires"
+        name="expires"
+        nullable="false"
+        type="integer" />
+    <field
+        column="revoked"
+        default="false"
+        name="revoked"
+        nullable="false"
+        type="boolean" />
+    <field
+        column="token"
+        name="token"
+        nullable="false"
+        type="string" />
+    <id
+        column="id"
+        name="id"
+        type="integer">
+      <generator strategy="AUTO"/>
+    </id>
+    <many-to-one
+        field="user"
+        inversed-by="tokens"
+        target-entity="User">
+      <join-column
+          name="user_handle"
+          referenced-column-name="handle" />
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity
+      name="KaLehmann\UnlockedServer\Model\Client"
+      table="clients">
+    <field
+        column="deleted"
+        default="false"
+        name="deleted"
+        nullable="false"
+        type="boolean" />
+    <field
+        column="description"
+        name="description"
+        nullable="false"
+        type="string" />
+    <field
+        column="secret"
+        name="secret"
+        nullable="false"
+        type="string" />
+    <id
+        column="handle"
+        name="handle"
+        type="string" />
+    <many-to-one
+        field="user"
+        inversed-by="clients"
+        target-entity="User">
+      <join-column
+          name="user_handle"
+          referenced-column-name="handle" />
+    </many-to-one>
+    <one-to-many field="requests"
+                 mapped-by="client"
+                 target-entity="Request" />
+  </entity>
+</doctrine-mapping>
