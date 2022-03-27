@@ -87,7 +87,7 @@ class Request
         return $this->id;
     }
 
-    public function getKey(): string
+    public function getKey(): Key
     {
         return $this->key;
     }
@@ -109,7 +109,7 @@ class Request
 
     public function setState(string $state): void
     {
-        return $this->state;
+        $this->state = $state;
     }
 
     public function getUser(): User
