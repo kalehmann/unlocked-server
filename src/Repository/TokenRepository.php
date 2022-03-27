@@ -27,6 +27,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use KaLehmann\UnlockedServer\Model\Token;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+/**
+ * @extends ServiceEntityRepository<Token>
+ */
 class TokenRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)

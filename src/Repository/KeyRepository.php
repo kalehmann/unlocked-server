@@ -27,6 +27,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use KaLehmann\UnlockedServer\Model\Key;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+/**
+ * @extends ServiceEntityRepository<Key>
+ */
 class KeyRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)

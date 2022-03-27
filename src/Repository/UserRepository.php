@@ -27,6 +27,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use KaLehmann\UnlockedServer\Model\User;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+/**
+ * @extends ServiceEntityRepository<User>
+ */
 class UserRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
