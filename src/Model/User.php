@@ -36,6 +36,9 @@ class User
 
     private string $password;
 
+    /**
+     * @var Collection<int, Token>
+     */
     private Collection $tokens;
 
     public function __construct(string $handle)
@@ -88,6 +91,9 @@ class User
         $this->tokens->add($token);
     }
 
+    /**
+     * @return Collection<int, Token>
+     */
     public function getTokens(): Collection
     {
         return $this->tokens;
