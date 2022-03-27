@@ -1,0 +1,12 @@
+---
+doctrine:
+        dbal:
+                default_connection: "default"
+        orm:
+                auto_mapping: true
+                mappings:
+                        UnlockedServer:
+                                dir: "%kernel.project_dir%/config/mapping"
+                                prefix: "KaLehmann\\UnlockedServer\\Model"
+                                type: "yml"
+...

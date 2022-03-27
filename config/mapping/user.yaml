@@ -1,0 +1,32 @@
+---
+KaLehmann\UnlockedServer\Model\User:
+        fields:
+                email:
+                        nullable: false
+                        type: "string"
+                mobile:
+                        nullable: true
+                        type: "string"
+                password:
+                        nullable: false
+                        type: "string"
+        id:
+                handle:
+                        type: "string"
+        oneToMany:
+                clients:
+                        mappedBy: "user"
+                        targetEntity: "Client"
+                keys:
+                        mappedBy: "user"
+                        targetEntity: "Key"
+                requests:
+                        mappedBy: "user"
+                        targetEntity: "Request"
+                tokens:
+                        mappedBy: "user"
+                        targetEntity: "Token"
+        repositoryClass: "KaLehmann\\UnlockedServer\\Repository\\UserRepository"
+        table: "users"
+        type: "entity"
+...

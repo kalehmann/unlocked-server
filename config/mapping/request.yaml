@@ -1,0 +1,38 @@
+---
+KaLehmann\UnlockedServer\Model\Request:
+        fields:
+                created:
+                        nullable: false
+                        type: "integer"
+                expires:
+                        nullable: false
+                        type: "integer"
+                fulfilled:
+                        nullable: true
+                        type: "integer"
+                processed:
+                        nullable: true
+                        type: "integer"
+                state:
+                        nullable: false
+                        type: "string"
+        manyToOne:
+                client:
+                        joinColumn:
+                                name: "client_handle"
+                                referencedColumnName: "handle"
+                        targetEntity: "Client"
+                key:
+                        joinColumn:
+                                name: "key_handle"
+                                referencedColumnName: "handle"
+                        targetEntity: "Key"
+                user:
+                        joinColumn:
+                                name: "user_handle"
+                                referencedColumnName: "handle"
+                        targetEntity: "User"
+        repositoryClass: "KaLehmann\\UnlockedServer\\Repository\\RequestRepository"
+        table: "requests"
+        type: "entity"
+...
