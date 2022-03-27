@@ -21,7 +21,7 @@ jobs:
                         - name: "PHP CodeSniffer analysis"
                           uses: "./.github/actions/code-sniffer"
                           with:
-                                  source-directories: >-
+                                  path: >-
                                           public/ src/
         yaml-analysis:
                 runs-on: "ubuntu-latest"

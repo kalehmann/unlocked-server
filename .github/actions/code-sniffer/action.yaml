@@ -3,8 +3,8 @@ name: "PHP CodeSniffer"
 author: "Karsten Lehmann <mail@kalehmann.de>"
 description: "PHP coding style analysis"
 inputs:
-        source-directories:
-                description: "The directories containing the code"
+        path:
+                description: "The directories or files containing the code"
                 required: true
 runs:
         using: "docker"
@@ -14,5 +14,5 @@ runs:
                 - "-c"
                 - >-
                         php vendor/bin/phpcs --standard=PSR12
-                        ${{ inputs.source-directories }}
+                        ${{ inputs.path }}
 ...
