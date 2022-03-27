@@ -3,17 +3,34 @@
 ---
 version: "3.9"
 
+x-php-service: &php_service
+        build:
+                args:
+                        PHP_VERSION: "8.1"
+                context: "."
+                target: "ul_php"
+        working_dir: "/application"
+        volumes:
+                - ".:/application"
+                - "var:/application/var"
+                - "vendors:/application/vendor"
+
 services:
-        php:
-                build:
-                        args:
-                                PHP_VERSION: "8.1"
-                        context: "."
-                        target: "ul_php"
+        composer:
+                <<: *php_service
+                entrypoint:
+                        - "/usr/local/bin/composer"
+        console:
+                <<: *php_service
+                entrypoint:
+                        - "/usr/local/bin/php"
+                        - "/application/console"
+        server:
+                <<: *php_service
                 ports:
                         - "8000:8000"
-                working_dir: "/application"
-                volumes:
-                        - ".:/application"
-                        - "/application/var"
+
+volumes:
+        var:
+        vendors:
 ...
