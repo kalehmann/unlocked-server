@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class Client
 {
     private bool $deleted = false;
@@ -30,6 +33,11 @@ class Client
     private string $description;
 
     private string $handle;
+
+    /**
+     * @var Collection<int, Request>
+     */
+    private Collection $requests;
 
     private string $secret;
 
@@ -41,6 +49,7 @@ class Client
         User $user,
     ) {
         $this->handle = $handle;
+        $this->requests = new ArrayCollection();
         $this->secret = $secret;
         $this->user = $user;
     }
@@ -68,6 +77,28 @@ class Client
     public function getHandle(): string
     {
         return $this->handle;
+    }
+
+    public function addRequest(Request $request): void
+    {
+        if ($this->requests->contains($request)) {
+            return;
+        }
+
+        $this->requests->add($request);
+    }
+
+    /**
+     * @return Collection<int, Request>
+     */
+    public function getRequests(): Collection
+    {
+        return $this->requests;
+    }
+
+    public function removeRequest(Request $request): void
+    {
+        $this->requests->removeElement($request);
     }
 
     public function getSecret(): string

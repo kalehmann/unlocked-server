@@ -23,60 +23,68 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
-class Key
+class Request
 {
-    private bool $deleted = false;
+    private Client $client;
 
-    private string $description;
+    private int $created;
 
-    private string $handle;
+    private int $expires;
 
-    private string $key;
+    private ?int $fulfilled = null;
 
-    /**
-     * @var Collection<int, Request>
-     */
-    private Collection $requests;
+    private int $id;
+
+    private Key $key;
+
+    private ?int $processed = null;
+
+    private string $state;
 
     private User $user;
 
     public function __construct(
-        string $handle,
-        string $key,
+        Client $client,
+        Key $key,
         User $user,
+        int $created,
+        int $expires,
     ) {
-        $this->handle = $handle;
+        $this->client = $client;
+        $this->created = $created;
+        $this->expires = $expires;
         $this->key = $key;
-        $this->requests = new ArrayCollection();
         $this->user = $user;
     }
 
-    public function isDeleted(): bool
+    public function getClient(): Client
     {
-        return $this->deleted;
+        return $this->client;
     }
 
-    public function delete(): void
+    public function getCreated(): int
     {
-        $this->deleted = true;
+        return $this->created;
     }
 
-    public function getDescription(): string
+    public function getExpires(): int
     {
-        return $this->description;
+        return $this->expires;
     }
 
-    public function setDescription(string $description): void
+    public function getFulfilled(): ?int
     {
-        $this->description = $description;
+        return $this->fulfilled;
     }
 
-    public function getHandle(): string
+    public function setFulfilled(int $fulfilled): void
     {
-        return $this->handle;
+        $this->fulfilled = $fulfilled;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getKey(): string
@@ -84,26 +92,24 @@ class Key
         return $this->key;
     }
 
-    public function addRequest(Request $request): void
+    public function getProcessed(): ?int
     {
-        if ($this->requests->contains($request)) {
-            return;
-        }
-
-        $this->requests->add($request);
+        return $this->processed;
     }
 
-    /**
-     * @return Collection<int, Request>
-     */
-    public function getRequests(): Collection
+    public function setProcessed(int $processed): void
     {
-        return $this->requests;
+        $this->processed = $processed;
     }
 
-    public function removeRequest(Request $request): void
+    public function getState(): string
     {
-        $this->requests->removeElement($request);
+        return $this->state;
+    }
+
+    public function setState(string $state): void
+    {
+        return $this->state;
     }
 
     public function getUser(): User

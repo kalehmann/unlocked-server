@@ -28,13 +28,28 @@ use Doctrine\Common\Collections\Collection;
 
 class User
 {
+    /**
+     * @var Collection<int, Client>
+     */
+    private Collection $clients;
+
     private string $email;
 
     private string $handle;
 
+    /**
+     * @var Collection<int, Key>
+     */
+    private Collection $keys;
+
     private ?string $mobile;
 
     private string $password;
+
+    /**
+     * @var Collection<int, Request>
+     */
+    private Collection $requests;
 
     /**
      * @var Collection<int, Token>
@@ -43,8 +58,33 @@ class User
 
     public function __construct(string $handle)
     {
+        $this->clients = new ArrayCollection();
         $this->handle = $handle;
+        $this->keys = new ArrayCollection();
+        $this->requests = new ArrayCollection();
         $this->tokens = new ArrayCollection();
+    }
+
+    public function addClient(Client $client): void
+    {
+        if ($this->clients->contains($client)) {
+            return;
+        }
+
+        $this->clients->add($client);
+    }
+
+    /**
+     * @return Collection<int, Client>
+     */
+    public function getClients(): Collection
+    {
+        return $this->clients;
+    }
+
+    public function removeClient(Client $client): void
+    {
+        $this->clients->removeElement($client);
     }
 
     public function getEmail(): string
@@ -60,6 +100,28 @@ class User
     public function getHandle(): string
     {
         return $this->handle;
+    }
+
+    public function addKey(Key $key): void
+    {
+        if ($this->keys->contains($key)) {
+            return;
+        }
+
+        $this->keys->add($key);
+    }
+
+    /**
+     * @return Collection<int, Key>
+     */
+    public function getKeys(): Collection
+    {
+        return $this->keys;
+    }
+
+    public function removeKey(Key $key): void
+    {
+        $this->keys->removeElement($key);
     }
 
     public function getMobile(): ?string
@@ -80,6 +142,28 @@ class User
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    public function addRequest(Request $request): void
+    {
+        if ($this->requests->contains($request)) {
+            return;
+        }
+
+        $this->requests->add($request);
+    }
+
+    /**
+     * @return Collection<int, Request>
+     */
+    public function getRequests(): Collection
+    {
+        return $this->requests;
+    }
+
+    public function removeRequest(Request $request): void
+    {
+        $this->requests->removeElement($request);
     }
 
     public function addToken(Token $token): void
