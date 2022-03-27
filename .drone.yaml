@@ -21,7 +21,7 @@ steps:
           commands:
                   - >-
                         /usr/bin/env php -dmemory_limit=-1 vendor/bin/phpstan
-                        --level=max analyze public/ src/
+                        --level=max analyze console public/ src/
           depends_on:
                   - "Install the PHP dependencies"
         - name: "Style check of PHP code"
@@ -29,7 +29,7 @@ steps:
           commands:
                   - >-
                         /usr/bin/env php vendor/bin/phpcs
-                        --standard=PSR12 public/ src/
+                        --standard=PSR12 console public/ src/
           depends_on:
                   - "Install the PHP dependencies"
 
