@@ -1,5 +1,9 @@
+# yamllint disable rule:line-length
 ---
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'
+maintenance_init:
+        path: '/maintenance/init'
+        controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::init'
 ...

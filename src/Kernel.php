@@ -58,6 +58,13 @@ class Kernel extends BaseKernel
             ->autowire()
             ->autoconfigure()
         ;
+
+        $c->services()
+            ->load('KaLehmann\\UnlockedServer\\Controller\\', __DIR__ . '/Controller/*')
+            ->tag('controller.service_arguments')
+            ->autowire()
+            ->autoconfigure()
+        ;
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
