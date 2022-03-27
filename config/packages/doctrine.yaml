@@ -1,12 +1,17 @@
 ---
 doctrine:
         dbal:
+                connections:
+                        default:
+                                driver: "pdo_sqlite"
+                                url: "%env(DB_URL)%"
                 default_connection: "default"
         orm:
-                auto_mapping: true
+                auto_mapping: false
                 mappings:
                         UnlockedServer:
-                                dir: "%kernel.project_dir%/config/mapping"
+                                dir: "%kernel.project_dir%/config/mapping/"
+                                is_bundle: false
                                 prefix: "KaLehmann\\UnlockedServer\\Model"
-                                type: "yml"
+                                type: "xml"
 ...
