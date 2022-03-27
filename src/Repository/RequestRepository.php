@@ -24,15 +24,15 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use KaLehmann\UnlockedServer\Model\Request;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @extends ServiceEntityRepository<Request>
  */
 class RequestRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Request::class);
     }
