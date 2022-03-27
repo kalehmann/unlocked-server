@@ -12,6 +12,12 @@
             "email": "mail@kalehmann.de"
         }
     ],
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
+    },
     "require": {
         "symfony/config": "^6.0",
         "symfony/dependency-injection": "^6.0",
@@ -28,10 +34,12 @@
         "phpstan/phpstan": "^1.4",
         "squizlabs/php_codesniffer": "^3.6"
     },
-    "config": {
-        "allow-plugins": {
-            "symfony/flex": true,
-            "symfony/runtime": true
-        }
+    "scripts": {
+	"phpcs": [
+	    "php vendor/bin/phpcs --standard=PSR12 console public/ src/"
+	],
+	"phpstan": [
+	    "php -dmemory_limit=-1 vendor/bin/phpstan --level=max analyze console public/ src/"
+	]
     }
 }
