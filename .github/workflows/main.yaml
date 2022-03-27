@@ -19,6 +19,7 @@ jobs:
                         - uses: "php-actions/phpstan@master"
                           with:
                                   level: "max"
+                                  memory_limit: -1
                                   path: "console public/ src/"
         style-check:
                 runs-on: "ubuntu-latest"
