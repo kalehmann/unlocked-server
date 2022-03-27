@@ -26,6 +26,7 @@ namespace KaLehmann\UnlockedServer\Service;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
 
 /**
  * Service to list all databases from doctrine's default connection.
@@ -91,8 +92,17 @@ class ListDatabasesService
      */
     private function getDefaultConnection(): Connection
     {
-        return $this->doctrine->getConnection(
+        $connection = $this->doctrine->getConnection(
             $this->doctrine->getDefaultConnectionName(),
         );
+        if (false === ($connection instanceof Connection)) {
+            throw new RuntimeException(
+                'Expected ManagerRegistry::getConnection to return instance ' .
+                'of Doctrine\DBAL\Connection, got ' . get_class($connection) .
+                ' instead',
+            );
+        }
+
+        return $connection;
     }
 }
