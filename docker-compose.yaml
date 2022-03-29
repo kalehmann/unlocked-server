@@ -33,9 +33,28 @@ services:
                         - "/application/console"
         server:
                 <<: *php_service
+                depends_on:
+                        - "yarn"
                 ports:
                         - "8000:8000"
 
+        yarn:
+                build:
+                        args:
+                                NODE_VERSION: "17"
+                        context: "."
+                        target: "ul_node"
+                command:
+                        - "run"
+                        - "webpack"
+                        - "--mode=development"
+                        - "--watch"
+                entrypoint:
+                        - "docker-entrypoint.sh"
+                        - "yarn"
+                working_dir: "/application"
+                volumes:
+                        - ".:/application"
 volumes:
         var:
         vendors:

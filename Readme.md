@@ -63,6 +63,12 @@ If there are still permission errors after this, try to delete the volumes with
 docker-compose down -v
 ```
 
+For node packages run
+
+```
+docker-compose yarn add <package>
+```
+
 
 #### Perform static analysis and style checks
 

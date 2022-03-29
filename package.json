@@ -1,0 +1,11 @@
+{
+  "author": {
+    "name": "Karsten Lehmann",
+    "email": "mail@kalehmann.de",
+    "url": "https://kalehmann.de/"
+  },
+  "license": "AGPL-3.0-or-later",
+  "name": "unlocked-server",
+  "packageManager": "yarn@3.2.0",
+  "private": true
+}
