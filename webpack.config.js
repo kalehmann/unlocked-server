@@ -15,6 +15,10 @@ module.exports = {
 		    "sass-loader",
 		],
 	    },
+	    {
+		test: /\.(png)/,
+		type: 'asset/img',
+	    },
 	],
     },
     output: {

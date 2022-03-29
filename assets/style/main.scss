@@ -1,3 +1,27 @@
+@import './breakpoints';
+@import './forms';
+@import './messages';
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #3d3d3d;
+    background-color: #2d2d2d;
+    background-image: url("../img/noise.png");
+    color: #fbfbfb;
+    font-family: Verdana, sans-serif;
+    margin: 0;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+@include for-desktop-up {
+    main {
+	margin: auto;
+	min-width: 768px;
+	width: 70vh;
+    }
 }

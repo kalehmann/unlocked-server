@@ -25,11 +25,21 @@ namespace KaLehmann\UnlockedServer\Action;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class HelloAction extends AbstractController
 {
+    private Environment $twig;
+
+    public function __construct(Environment $twig)
+    {
+        $this->twig = $twig;
+    }
+
     public function __invoke(): Response
     {
-        return new Response('Hello!', Response::HTTP_OK);
+        return new Response(
+            $this->twig->render('hello.html.twig'),
+        );
     }
 }
