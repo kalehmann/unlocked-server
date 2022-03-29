@@ -48,6 +48,22 @@ docker-compose run console <command>
 docker-compose run composer require <package>
 ```
 
+**Note:** This command tries to write to local files as user and group `1000`.
+This may not fits everyones needs.
+The user and group ids can be changed by editing the [`Dockerfile`](Dockerfile)
+and rebuilding the image with
+
+```
+docker-compose build
+```
+
+If there are still permission errors after this, try to delete the volumes with
+
+```
+docker-compose down -v
+```
+
+
 #### Perform static analysis and style checks
 
 PHPCS and PHPStan are configured as composer scripts.
