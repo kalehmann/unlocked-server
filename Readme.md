@@ -33,7 +33,7 @@ docker-compose up server
 ```
 
 and the unlocked-server becomes available at
-[`https://localhost:8000`](`https://localhost:8000`).
+[`https://localhost:8000`](https://localhost:8000).
 
 #### Running symfony commands
 
