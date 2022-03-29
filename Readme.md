@@ -48,7 +48,7 @@ docker-compose run console <command>
 docker-compose run composer require <package>
 ```
 
-#### Perform static analysis and stlye checks
+#### Perform static analysis and style checks
 
 PHPCS and PHPStan are configured as composer scripts.
 They can be executed with
