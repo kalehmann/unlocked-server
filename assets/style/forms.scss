@@ -1,8 +1,20 @@
+button, input[type="submit"] {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 1.5em;
+    transition: all 0.2;
+
+    &:hover {
+	background-color: #dfdfdf;
+	color: #262626;
+    }
+}
+
 input {
     display: block;
     width: 100%;
-
-    &[type="password"], &[type="text"] {
+    
+    &[type="password"], &[type="submit"], &[type="text"] {
 	background-color: #262626;
 	border-bottom: 1px solid black;
 	border-right: none;
