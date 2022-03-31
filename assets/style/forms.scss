@@ -1,9 +1,58 @@
 input {
     display: block;
     width: 100%;
+
+    &[type="text"] {
+	background-color: #262626;
+	border-bottom: 1px solid black;
+	border-right: none;
+	color: white;
+	padding: 0.4em 0.2em;
+    }
+
+    &:focus ~ :not(input),
+    &:not(:placeholder-shown) ~ :not(input) {
+	bottom: 2rem;
+	color: #f6f6f6;
+	font-size: 1.2em;
+    }
 }
 
 label {
     display: block;
     margin-bottom: .5em;
+    padding-top: 1.5rem;
+    position: relative;
+
+    & > :not(input) {
+	bottom: 1px;
+	color: #b6b6b6;
+	padding-left: 0.2em;
+	position: absolute;
+	transition: bottom 0.2s;
+    }
+}
+
+
+.icon-input {
+    position: relative;
+
+    &::after {
+	background-size: contain;
+	bottom: 0.4em;
+	content: " ";
+	display: block;
+	height: 20px;
+	position: absolute;
+	right: 0.2em;
+	width: 20px;
+    }
+}
+
+.user-input {
+    &::after {
+	background-color: #b6b6b6;
+	-webkit-mask-image: url("../icon/user-20.svg");
+	mask-image: url("../icon/user-20.svg");
+    }
 }
