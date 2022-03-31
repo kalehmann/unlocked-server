@@ -2,7 +2,7 @@ input {
     display: block;
     width: 100%;
 
-    &[type="text"] {
+    &[type="password"], &[type="text"] {
 	background-color: #262626;
 	border-bottom: 1px solid black;
 	border-right: none;
@@ -46,6 +46,14 @@ label {
 	position: absolute;
 	right: 0.2em;
 	width: 20px;
+    }
+}
+
+.secret-input {
+    &::after {
+	background-color: #b6b6b6;
+	-webkit-mask-image: url("../icon/secret-20.svg");
+	mask-image: url("../icon/secret-20.svg");
     }
 }
 
