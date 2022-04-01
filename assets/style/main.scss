@@ -1,4 +1,5 @@
 @import './breakpoints';
+@import './colors';
 @import './forms';
 @import './messages';
 
@@ -7,9 +8,9 @@
 }
 
 body {
-    background-color: #2d2d2d;
+    background-color: $page-background-color;
     background-image: url("../img/noise.png");
-    color: #fbfbfb;
+    color: $foreground-color;
     font-family: Verdana, sans-serif;
     margin: 0;
 }
@@ -21,7 +22,7 @@ h1, h2, h3 {
 pre {
     border: 1px solid black;
     border-radius: 5px;
-    background-color: #262626;
+    background-color: $background-color;
     color: white;
     padding: 1em;
 }
