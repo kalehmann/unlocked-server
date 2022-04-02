@@ -4,11 +4,16 @@ button, input[type="submit"] {
     border: 1px solid black;
     border-radius: 5px;
     margin-top: 1.5em;
-    transition: all 0.2;
+    transition: all 0.5;
 
     &:hover {
 	background-color: $foreground-color;
 	color: $background-color;
+
+	&:active {
+	    background-color: $background-color;
+	    color: $foreground-color;
+	}
     }
 }
 
