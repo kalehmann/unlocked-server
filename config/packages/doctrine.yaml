@@ -4,7 +4,7 @@ doctrine:
                 connections:
                         default:
                                 driver: "pdo_sqlite"
-                                url: "%env(DB_URL)%"
+                                path: "%env(resolve:DB_PATH)%"
                 default_connection: "default"
         orm:
                 auto_mapping: false

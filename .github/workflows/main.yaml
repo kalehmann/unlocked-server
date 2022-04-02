@@ -14,7 +14,7 @@ jobs:
                                   APP_ENV=test
                                   APP_DEBUG=0
                                   APP_SECRET=test
-                                  DB_URL=sqlite3:///test.db
+                                  DB_PATH=%kernel.project_dir%/test.db
                                   EOF
                         - uses: "php-actions/phpstan@master"
                           with:
