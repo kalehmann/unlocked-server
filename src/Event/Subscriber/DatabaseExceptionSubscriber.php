@@ -76,9 +76,9 @@ class DatabaseExceptionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $initUrl = $this->urlGenerator->generate('maintenance_init');
+        $statusUrl = $this->urlGenerator->generate('maintenance_status');
         $event->setResponse(
-            new RedirectResponse($initUrl),
+            new RedirectResponse($statusUrl),
         );
 
         $this->logger->warning(

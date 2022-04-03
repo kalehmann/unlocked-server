@@ -29,7 +29,7 @@ use Twig\Environment;
 
 class MaintenanceController
 {
-    public function init(
+    public function status(
         ListDatabasesService $listDatabasesService,
         Environment $twig,
     ): Response {
