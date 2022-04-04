@@ -1,6 +1,6 @@
 @import './colors';
 
-button[type="submit"], input[type="submit"] {
+.button, button[type="submit"], input[type="submit"] {
     border: 1px solid black;
     border-radius: 5px;
     margin-top: 1.5em;
@@ -17,17 +17,16 @@ button[type="submit"], input[type="submit"] {
     }
 }
 
-button, input {
+.button, button, input {
+    background-color: $background-color;
+    border-bottom: 1px solid black;
+    border-right: none;
+    color: $foreground-color;
     display: block;
+    padding: 0.4em 0.2em;
+    text-align: center;
+    text-decoration: none;
     width: 100%;
-    
-    &[type="password"], &[type="submit"], &[type="text"] {
-	background-color: $background-color;
-	border-bottom: 1px solid black;
-	border-right: none;
-	color: $foreground-color;
-	padding: 0.4em 0.2em;
-    }
 
     &:focus ~ :not(input),
     &:not(:placeholder-shown) ~ :not(input) {

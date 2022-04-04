@@ -3,6 +3,10 @@
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'
+maintenance_init_db:
+        path: '/maintenance/init_db'
+        controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::initDb'
+        methods: 'POST'
 maintenance_status:
         path: '/maintenance/status'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::status'

@@ -24,25 +24,77 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller;
 
 use KaLehmann\UnlockedServer\Service\ListDatabasesService;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 class MaintenanceController
 {
+    public function initDb(
+        KernelInterface $kernel,
+        Environment $twig,
+        UrlGeneratorInterface $urlGenerator,
+    ): Response {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'doctrine:database:create',
+        ]);
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        $content = $output->fetch();
+
+        return new Response(
+            $twig->render(
+                'maintenance/command_output.html.twig',
+                [
+                    'backUrl' => $urlGenerator->generate('maintenance_status'),
+                    'output' => $content,
+                ],
+            ),
+            Response::HTTP_OK
+        );
+    }
+
     public function status(
+        FormFactoryInterface $formFactory,
         ListDatabasesService $listDatabasesService,
         Environment $twig,
+        UrlGeneratorInterface $urlGenerator,
     ): Response {
         $databaseExists = in_array(
             $listDatabasesService->getDefaultDatabaseName(),
             $listDatabasesService->getDatabases(),
         );
 
+        $form = $formFactory->createBuilder()
+                            ->add(
+                                'save',
+                                SubmitType::class,
+                                [
+                                    'label' => 'Create Database',
+                                ],
+                            )
+                            ->setAction(
+                                $urlGenerator->generate('maintenance_init_db'),
+                            )
+                            ->getForm()
+                            ->createView();
+
         return new Response(
             $twig->render(
-                'maintenance/init.html.twig',
+                'maintenance/status.html.twig',
                 [
                     'dbExists' => $databaseExists,
+                    'form' => $form,
                 ],
             ),
             Response::HTTP_OK
