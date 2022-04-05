@@ -1,4 +1,7 @@
 ---
 framework:
-    secret: '%env(APP_SECRET)%'
+        default_locale: 'en'
+        translator:
+                default_path: '%kernel.project_dir%/translations'
+        secret: '%env(APP_SECRET)%'
 ...

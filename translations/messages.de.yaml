@@ -1,0 +1,9 @@
+---
+maintenance:
+        command:
+                back: 'Zurück'
+        database:
+                create: 'Datenbank erstellen'
+                exists: 'Databank ist vorhanden'
+                missing: 'Databank ist nicht vorhanden'
+...

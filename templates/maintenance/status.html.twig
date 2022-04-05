@@ -4,9 +4,13 @@
   <h1>Maintenance</h1>
 
   {% if dbExists %}
-    <div class="messagebox success">Database does exist</div>
+  <div class="messagebox success">
+    {% trans %}maintenance.database.exists{% endtrans %}
+  </div>
   {% else %}
-    <div class="messagebox danger">Database does not exist</div>
-    {{ form(form) }}
+  <div class="messagebox danger">
+    {% trans %}maintenance.database.missing{% endtrans %}
+  </div>
+  {{ form(form) }}
   {% endif %}
 {% endblock %}

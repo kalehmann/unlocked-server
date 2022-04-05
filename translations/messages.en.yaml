@@ -1,0 +1,9 @@
+---
+maintenance:
+        command:
+                back: 'Go back'
+        database:
+                create: 'Create database'
+                exists: 'Database exists'
+                missing: 'Database does not exist'
+...
