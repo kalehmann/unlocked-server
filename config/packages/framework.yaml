@@ -1,7 +1,10 @@
 ---
 framework:
+        csrf_protection: ~
         default_locale: 'en'
+        secret: '%env(APP_SECRET)%'
+        session:
+                handler_id: null
         translator:
                 default_path: '%kernel.project_dir%/translations'
-        secret: '%env(APP_SECRET)%'
 ...
