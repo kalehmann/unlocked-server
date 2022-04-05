@@ -2,6 +2,8 @@
 maintenance:
         command:
                 back: 'Zurück'
+                output: 'Ausgabe'
+                title: 'Führe Befehl aus'
         database:
                 create: 'Datenbank erstellen'
                 exists: 'Databank ist vorhanden'

@@ -1,8 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+<h1>{% trans %}maintenance.command.title{% endtrans %}</h1>
+
 <pre>
-  {{ output }}
+php console {{ command }}
+</pre>
+
+<p>{% trans %}maintenance.command.output{% endtrans %}:</p>
+
+<pre>
+{{ output }}
 </pre>
 
 <a class="button" href="{{ backUrl }}">

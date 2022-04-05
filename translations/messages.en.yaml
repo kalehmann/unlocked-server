@@ -2,6 +2,8 @@
 maintenance:
         command:
                 back: 'Go back'
+                output: 'Output'
+                title: 'Running command'
         database:
                 create: 'Create database'
                 exists: 'Database exists'

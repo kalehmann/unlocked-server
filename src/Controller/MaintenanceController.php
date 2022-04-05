@@ -41,26 +41,14 @@ class MaintenanceController
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
     ): Response {
-        $application = new Application($kernel);
-        $application->setAutoExit(false);
-
-        $input = new ArrayInput([
-            'command' => 'doctrine:database:create',
-        ]);
-
-        $output = new BufferedOutput();
-        $application->run($input, $output);
-        $content = $output->fetch();
-
-        return new Response(
-            $twig->render(
-                'maintenance/command_output.html.twig',
-                [
-                    'backUrl' => $urlGenerator->generate('maintenance_status'),
-                    'output' => $content,
-                ],
-            ),
-            Response::HTTP_OK
+        return $this->commandAction(
+            $kernel,
+            $twig,
+            $urlGenerator,
+            'doctrine:database:create',
+            [
+                '-vvv' => true,
+            ],
         );
     }
 
@@ -95,6 +83,56 @@ class MaintenanceController
                 [
                     'dbExists' => $databaseExists,
                     'form' => $form,
+                ],
+            ),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @param KernelInterface $kernel
+     * @param Environment $twig
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param string $command
+     * @param array<string, scalar> $parameters
+     *
+     * @return Response
+     */
+    private function commandAction(
+        KernelInterface $kernel,
+        Environment $twig,
+        UrlGeneratorInterface $urlGenerator,
+        string $command,
+        array $parameters,
+    ): Response {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => $command,
+            ...$parameters,
+        ]);
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        $content = $output->fetch();
+        $commandString = $command . ' ' .
+                       implode(
+                           ' ',
+                           array_map(
+                               fn($value, string $key) => $key . '=' . $value,
+                               $parameters,
+                               array_keys($parameters),
+                           ),
+                       );
+
+        return new Response(
+            $twig->render(
+                'maintenance/command_output.html.twig',
+                [
+                    'backUrl' => $urlGenerator->generate('maintenance_status'),
+                    'command' => $commandString,
+                    'output' => $content,
                 ],
             ),
             Response::HTTP_OK
