@@ -51,7 +51,7 @@
   };
   \node[relation, right = 3 of user] (rel_client_user) {manages};
   \node[relation, below = 3 of user] (rel_key_user) {manages};
-  \node[relation, below right = of user] (rel_request_user) {can\\process};
+  \node[relation, below right = 5 of user] (rel_request_user) {can\\process};
   \node[relation, left = of user] (rel_token_user) {has};
 
   \node[basic, left = of rel_token_user] (token) {token
@@ -73,7 +73,16 @@
     deleted
   };
 
-  \node[basic, below right = of rel_request_user] (request) {request
+  \node[basic, below = 3 of rel_key_user] (key) {key
+    \nodepart{second}
+    \key{handle}\\
+    key\\
+    user\_handle\\
+    description\\
+    deleted
+  };
+
+  \node[basic, right = 8 of key] (request) {request
     \nodepart{second}
     \key{id}\\
     client\_handle\\
@@ -86,23 +95,13 @@
     fulfilled
   };
 
-  \node[basic, below = 3 of rel_key_user] (key) {key
-    \nodepart{second}
-    \key{handle}\\
-    key\\
-    user\_handle\\
-    description\\
-    deleted
-  };
-  \node[relation, below left = 1.5 and 0 of client] (rel_client_request) {has};
-  \node[relation, below left = -0.5 and 1 of request] (rel_key_request) {has};
-  \node[relation, right = 8.4 of key] (rel_client_key) {can\\request};
+  \node[relation, below = 2.5 of client] (rel_client_request) {has};
+  \node[relation, left = 3 of request] (rel_key_request) {has};
 
   \draw[double dashed] (client) -- (rel_client_user) node[above,midway,quantity] {\(n\)} -- (user) node[above,midway,quantity] {1};
   \draw[double dashed] (key) -- (rel_key_user) node[midway,quantity] {\(n\)} -- (user) node[midway,quantity] {1};
   \draw[double dashed] (token) -- (rel_token_user) node[midway,quantity] {\(n\)} -- (user) node[midway,quantity] {1};
   \draw[double dashed] (user) -- (rel_request_user) node[midway,quantity] {1} -- (request) node[midway,quantity] {\(n\)};
-  \draw[double dashed] (client) -- (rel_client_key) node[midway,quantity] {\(n\)} -- (key) node[midway,quantity] {\(m\)};
   \draw[double dashed] (client) -- (rel_client_request) node[midway,quantity] {1} -- (request) node[midway,quantity] {\(n\)};
   \draw[double dashed] (key) -- (rel_key_request) node[midway,quantity] {1} -- (request) node[midway,quantity] {\(n\)};
 \end{tikzpicture}
