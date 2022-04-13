@@ -179,7 +179,7 @@ class MaintenanceController
                                 'save',
                                 SubmitType::class,
                                 [
-                                    'label' => 'Create Database',
+                                    'label' => 'maintenance.database.create',
                                 ],
                             )
                             ->setAction(
