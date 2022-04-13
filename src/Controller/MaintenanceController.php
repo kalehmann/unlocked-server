@@ -84,6 +84,50 @@ class MaintenanceController
         );
     }
 
+    public function migrate(
+        FormFactoryInterface $formFactory,
+        KernelInterface $kernel,
+        LoggerInterface $logger,
+        Request $request,
+        Environment $twig,
+        UrlGeneratorInterface $urlGenerator,
+    ): Response {
+        $form = $this->buildRunMigrationsForm($formFactory, $urlGenerator);
+        $form->handleRequest($request);
+
+        $isSubmitted = $form->isSubmitted();
+        if (false === $isSubmitted || false === $form->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('maintenance_migrate') .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('maintenance_migrate') .
+                    '" but form was not submitted',
+                );
+            }
+
+            return new RedirectResponse(
+                $urlGenerator->generate('maintenance_status'),
+            );
+        }
+
+        return $this->commandAction(
+            $kernel,
+            $twig,
+            $urlGenerator,
+            'doctrine:migrations:migrate',
+            [
+                '--no-interaction' => true,
+                '-vvv' => true,
+            ],
+        );
+    }
+
     public function status(
         FormFactoryInterface $formFactory,
         ListDatabasesService $listDatabasesService,
@@ -104,8 +148,11 @@ class MaintenanceController
                 ->schemaUpToDate();
         }
 
-        $form = $this
+        $createDbForm = $this
               ->buildCreateDatabaseForm($formFactory, $urlGenerator)
+              ->createView();
+        $migrationsForm = $this
+              ->buildRunMigrationsForm($formFactory, $urlGenerator)
               ->createView();
 
         return new Response(
@@ -115,7 +162,8 @@ class MaintenanceController
                     'dbExists' => $databaseExists,
                     'schemaUpToDate' => $schemaUpToDate,
                     'unregisteredMigrations' => $unregisteredMigrations,
-                    'form' => $form,
+                    'createDbForm' => $createDbForm,
+                    'migrationsForm' => $migrationsForm,
                 ],
             ),
             Response::HTTP_OK
@@ -136,6 +184,24 @@ class MaintenanceController
                             )
                             ->setAction(
                                 $urlGenerator->generate('maintenance_init_db'),
+                            )
+                           ->getForm();
+    }
+
+    private function buildRunMigrationsForm(
+        FormFactoryInterface $formFactory,
+        UrlGeneratorInterface $urlGenerator,
+    ): FormInterface {
+        return $formFactory->createBuilder()
+                            ->add(
+                                'save',
+                                SubmitType::class,
+                                [
+                                    'label' => 'maintenance.database.run_migrations',
+                                ],
+                            )
+                            ->setAction(
+                                $urlGenerator->generate('maintenance_migrate'),
                             )
                            ->getForm();
     }

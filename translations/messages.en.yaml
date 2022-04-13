@@ -9,6 +9,7 @@ maintenance:
                 exists: 'Database exists'
                 missing: 'Database does not exist'
                 new_migrations: 'New migrations where detected'
+                run_migrations: 'Run migrations'
                 up_to_date: 'The database is up to date'
                 unregistered_migrations: >-
                         There are migration in the database, that do not

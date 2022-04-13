@@ -16,6 +16,7 @@
   <div class="messagebox danger">
     {% trans %}maintenance.database.new_migrations{% endtrans %}
   </div>
+  {{ form(migrationsForm) }}
       {% endif %}
     {% else %}
   <div class="messagebox success">
@@ -26,6 +27,6 @@
   <div class="messagebox danger">
     {% trans %}maintenance.database.missing{% endtrans %}
   </div>
-  {{ form(form) }}
+  {{ form(createDbForm) }}
   {% endif %}
 {% endblock %}
