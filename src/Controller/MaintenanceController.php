@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller;
 
 use KaLehmann\UnlockedServer\Service\ListDatabasesService;
+use KaLehmann\UnlockedServer\Service\MigrationStatusService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -86,6 +87,7 @@ class MaintenanceController
     public function status(
         FormFactoryInterface $formFactory,
         ListDatabasesService $listDatabasesService,
+        MigrationStatusService $migrationStatusService,
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
     ): Response {
@@ -93,6 +95,14 @@ class MaintenanceController
             $listDatabasesService->getDefaultDatabaseName(),
             $listDatabasesService->getDatabases(),
         );
+        $unregisteredMigrations = false;
+        $schemaUpToDate = false;
+        if ($databaseExists) {
+            $unregisteredMigrations = $migrationStatusService
+                ->unregisteredMigrationsDetected();
+            $schemaUpToDate = $migrationStatusService
+                ->schemaUpToDate();
+        }
 
         $form = $this
               ->buildCreateDatabaseForm($formFactory, $urlGenerator)
@@ -103,6 +113,8 @@ class MaintenanceController
                 'maintenance/status.html.twig',
                 [
                     'dbExists' => $databaseExists,
+                    'schemaUpToDate' => $schemaUpToDate,
+                    'unregisteredMigrations' => $unregisteredMigrations,
                     'form' => $form,
                 ],
             ),

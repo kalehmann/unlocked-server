@@ -8,4 +8,9 @@ maintenance:
                 create: 'Create database'
                 exists: 'Database exists'
                 missing: 'Database does not exist'
+                new_migrations: 'New migrations where detected'
+                up_to_date: 'The database is up to date'
+                unregistered_migrations: >-
+                        There are migration in the database, that do not
+                        exist in the source code of the application.
 ...

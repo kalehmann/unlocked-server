@@ -7,6 +7,21 @@
   <div class="messagebox success">
     {% trans %}maintenance.database.exists{% endtrans %}
   </div>
+    {% if not schemaUpToDate %}
+      {% if unregisteredMigrations %}
+  <div class="messagebox danger">
+    {% trans %}maintenance.database.unregistered_migrations{% endtrans %}
+  </div>
+      {% else %}
+  <div class="messagebox danger">
+    {% trans %}maintenance.database.new_migrations{% endtrans %}
+  </div>
+      {% endif %}
+    {% else %}
+  <div class="messagebox success">
+    {% trans %}maintenance.database.up_to_date{% endtrans %}
+  </div>
+    {% endif %}
   {% else %}
   <div class="messagebox danger">
     {% trans %}maintenance.database.missing{% endtrans %}

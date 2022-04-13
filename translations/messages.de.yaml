@@ -8,4 +8,9 @@ maintenance:
                 create: 'Datenbank erstellen'
                 exists: 'Databank ist vorhanden'
                 missing: 'Databank ist nicht vorhanden'
+                new_migrations: 'Es wurden neue Migrationen gefunden'
+                up_to_date: 'Die Datenbank ist aktuell'
+                unregistered_migrations: >-
+                        In der Datenbank wurden Migrationen entdeckt, welche
+                        nicht im Quellcode der Anwendung existieren.
 ...
