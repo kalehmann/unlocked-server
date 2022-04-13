@@ -1,0 +1,6 @@
+# yamllint disable rule:line-length
+---
+doctrine_migrations:
+        migrations_paths:
+                'KaLehmann\UnlockedServer\Migrations': "%kernel.project_dir%/src/Migrations"
+...
