@@ -24,11 +24,15 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller;
 
 use KaLehmann\UnlockedServer\Service\ListDatabasesService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -37,10 +41,37 @@ use Twig\Environment;
 class MaintenanceController
 {
     public function initDb(
+        FormFactoryInterface $formFactory,
         KernelInterface $kernel,
+        LoggerInterface $logger,
+        Request $request,
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
     ): Response {
+        $form = $this->buildCreateDatabaseForm($formFactory, $urlGenerator);
+        $form->handleRequest($request);
+
+        $isSubmitted = $form->isSubmitted();
+        if (false === $isSubmitted || false === $form->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('maintenance_init_db') .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('maintenance_init_db') .
+                    '" but form was not submitted',
+                );
+            }
+
+            return new RedirectResponse(
+                $urlGenerator->generate('maintenance_status'),
+            );
+        }
+
         return $this->commandAction(
             $kernel,
             $twig,
@@ -63,19 +94,9 @@ class MaintenanceController
             $listDatabasesService->getDatabases(),
         );
 
-        $form = $formFactory->createBuilder()
-                            ->add(
-                                'save',
-                                SubmitType::class,
-                                [
-                                    'label' => 'Create Database',
-                                ],
-                            )
-                            ->setAction(
-                                $urlGenerator->generate('maintenance_init_db'),
-                            )
-                            ->getForm()
-                            ->createView();
+        $form = $this
+              ->buildCreateDatabaseForm($formFactory, $urlGenerator)
+              ->createView();
 
         return new Response(
             $twig->render(
@@ -87,6 +108,24 @@ class MaintenanceController
             ),
             Response::HTTP_OK
         );
+    }
+
+    private function buildCreateDatabaseForm(
+        FormFactoryInterface $formFactory,
+        UrlGeneratorInterface $urlGenerator,
+    ): FormInterface {
+        return $formFactory->createBuilder()
+                            ->add(
+                                'save',
+                                SubmitType::class,
+                                [
+                                    'label' => 'Create Database',
+                                ],
+                            )
+                            ->setAction(
+                                $urlGenerator->generate('maintenance_init_db'),
+                            )
+                           ->getForm();
     }
 
     /**
