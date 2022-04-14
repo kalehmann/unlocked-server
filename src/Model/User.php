@@ -25,8 +25,10 @@ namespace KaLehmann\UnlockedServer\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class User
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
      * @var Collection<int, Client>
@@ -85,6 +87,10 @@ class User
     public function removeClient(Client $client): void
     {
         $this->clients->removeElement($client);
+    }
+
+    public function eraseCredentials(): void
+    {
     }
 
     public function getEmail(): string
@@ -166,6 +172,11 @@ class User
         $this->requests->removeElement($request);
     }
 
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
     public function addToken(Token $token): void
     {
         if ($this->tokens->contains($token)) {
@@ -186,5 +197,10 @@ class User
     public function removeToken(Token $token): void
     {
         $this->tokens->removeElement($token);
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->handle;
     }
 }
