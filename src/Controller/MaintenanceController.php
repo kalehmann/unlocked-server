@@ -155,11 +155,39 @@ class MaintenanceController
               ->buildRunMigrationsForm($formFactory, $urlGenerator)
               ->createView();
 
+        $extensions = [];
+        foreach (get_loaded_extensions() as $name) {
+            $extensions[$name] = [
+                'name' => $name,
+                'installed' => phpversion($name),
+                'required' => false,
+            ];
+        }
+        $requiredExtensions = [
+            'tokenizer',
+            'xml',
+            'xmlwriter',
+        ];
+        foreach ($requiredExtensions as $name) {
+            $ext = $extensions[$name] ?? [
+                'name' => $name,
+                'installed' => false,
+                'required' => false,
+            ];
+            $ext['required'] = true;
+            $extensions[$name] = $ext;
+        }
+        $phpVersion = phpversion();
+        $phpVersionSufficient = version_compare($phpVersion, '8.0.0', '>=');
+
         return new Response(
             $twig->render(
                 'maintenance/status.html.twig',
                 [
                     'dbExists' => $databaseExists,
+                    'extensions' => $extensions,
+                    'phpVersion' => $phpVersion,
+                    'phpVersionSufficient' => $phpVersionSufficient,
                     'schemaUpToDate' => $schemaUpToDate,
                     'unregisteredMigrations' => $unregisteredMigrations,
                     'createDbForm' => $createDbForm,

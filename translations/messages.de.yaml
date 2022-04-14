@@ -14,4 +14,13 @@ maintenance:
                 unregistered_migrations: >-
                         In der Datenbank wurden Migrationen entdeckt, welche
                         nicht im Quellcode der Anwendung existieren.
+        server:
+                extensions:
+                        installed: 'Installierte Version'
+                        name: 'Name'
+                        required: 'Erforderlich'
+                        title: 'PHP Erweiterungen'
+                info: 'Server Informationen'
+                php_version: 'PHP Version'
+                php_version_error: 'Nicht unterstützte PHP Version'
 ...

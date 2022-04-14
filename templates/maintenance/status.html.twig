@@ -3,6 +3,11 @@
 {% block content %}
   <h1>Maintenance</h1>
 
+  {% if not phpVersionSufficient %}
+  <div class="messagebox danger">
+    {% trans %}maintenance.server.php_version_error{% endtrans %}
+  </div>
+  {% endif %}
   {% if dbExists %}
   <div class="messagebox success">
     {% trans %}maintenance.database.exists{% endtrans %}
@@ -29,4 +34,45 @@
   </div>
   {{ form(createDbForm) }}
   {% endif %}
+
+  <h2>{% trans %}maintenance.server.info{% endtrans %}</h2>
+
+  <p>
+    {% trans %}maintenance.server.php_version{% endtrans %}: {{ phpVersion }}
+    {% if phpVersionSufficient %}✅{% else %}❌{% endif %}
+  </p>
+  <strong>
+    {% trans %}maintenance.server.extensions.title{% endtrans %}
+  </strong>
+
+  <table>
+    <thead>
+      <tr>
+        <th>{% trans %}maintenance.server.extensions.name{% endtrans %}</th>
+        <th>{% trans %}maintenance.server.extensions.installed{% endtrans %}</th>
+        <th>{% trans %}maintenance.server.extensions.required{% endtrans %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ext in extensions %}
+      <tr>
+        <td>{{ ext.name }}</td>
+        <td>
+          {%- if ext.installed -%}
+          {{ ext.installed }}
+          {% else %}
+          ❌
+          {%- endif -%}
+        </td>
+        <td>
+          {%- if ext.required -%}
+          ✅
+          {% else %}
+          ❌
+          {%- endif -%}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

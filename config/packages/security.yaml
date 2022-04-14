@@ -6,16 +6,16 @@ security:
                         roles:
                                 - "ROLE_ADMIN"
         firewalls:
+                maintenance:
+                        http_basic: ~
+                        pattern: "^/maintenance"
+                        provider: "maintenance_users"
                 main:
                         form_login:
                                 check_path: "login"
                                 enable_csrf: true
                                 login_path: "login"
                         provider: "application_users"
-                maintenance:
-                        http_basic: ~
-                        pattern: "^/maintenance"
-                        provider: "maintenance_users"
         password_hashers:
                 KaLehmann\UnlockedServer\Model\User: "auto"
                 Symfony\Component\Security\Core\User\InMemoryUser: "plaintext"

@@ -14,4 +14,13 @@ maintenance:
                 unregistered_migrations: >-
                         There are migration in the database, that do not
                         exist in the source code of the application.
+        server:
+                extensions:
+                        installed: 'Installed version'
+                        name: 'Name'
+                        required: 'Required'
+                        title: 'PHP extensions'
+                info: 'Server information'
+                php_version: 'PHP version'
+                php_version_error: 'Unsupported PHP version'
 ...
