@@ -80,9 +80,23 @@ class AddUserCommand extends Command
         OutputInterface $output,
     ): int {
         $email = $input->getOption('email');
+        if (false === is_string($email)) {
+            throw new \RuntimeException('Expected `email` to be a type string');
+        }
         $handle = $input->getArgument('handle');
+        if (false === is_string($handle)) {
+            throw new \RuntimeException('Expected `handle` to be a type string');
+        }
         $password = $input->getOption('password');
+        if (false === is_string($password)) {
+            throw new \RuntimeException(
+                'Expected `password` to be a type string',
+            );
+        }
         $phone = $input->getOption('phone');
+        if (false === is_string($phone)) {
+            throw new \RuntimeException('Expected `phone` to be a type string');
+        }
         $user = new User($handle);
         $user->setEmail($email);
         $user->setPassword(
