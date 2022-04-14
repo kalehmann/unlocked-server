@@ -3,6 +3,9 @@
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'
+login:
+        path: '/login'
+        controller: 'KaLehmann\UnlockedServer\Controller\LoginController::login'
 maintenance_init_db:
         path: '/maintenance/init_db'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::initDb'

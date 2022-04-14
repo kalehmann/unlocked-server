@@ -6,6 +6,11 @@ security:
                         roles:
                                 - "ROLE_ADMIN"
         firewalls:
+                main:
+                        form_login:
+                                check_path: "login"
+                                enable_csrf: true
+                                login_path: "login"
                 maintenance:
                         http_basic: ~
                         pattern: "^/maintenance"
