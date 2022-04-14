@@ -11,6 +11,7 @@ security:
                                 check_path: "login"
                                 enable_csrf: true
                                 login_path: "login"
+                        provider: "application_users"
                 maintenance:
                         http_basic: ~
                         pattern: "^/maintenance"
@@ -19,6 +20,10 @@ security:
                 KaLehmann\UnlockedServer\Model\User: "auto"
                 Symfony\Component\Security\Core\User\InMemoryUser: "plaintext"
         providers:
+                application_users:
+                        entity:
+                                class: "KaLehmann\\UnlockedServer\\Model\\User"
+                                property: "handle"
                 maintenance_users:
                         memory:
                                 users:
