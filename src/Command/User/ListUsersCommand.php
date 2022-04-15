@@ -36,7 +36,7 @@ use Symfony\Component\Console\Output\OutputInterface;
     description: 'Lists users of the unlocked server.',
     hidden: false,
 )]
-class ListUserCommand extends Command
+class ListUsersCommand extends Command
 {
     public function __construct(
         private UserRepository $userRepository,
