@@ -30,7 +30,7 @@ class Client
 {
     private bool $deleted = false;
 
-    private string $description;
+    private string $description = '';
 
     private string $handle;
 
