@@ -36,4 +36,37 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    /**
+     * @return callable(string): array<string>
+     */
+    public function getUserHandlesAutocompleter(): callable
+    {
+        return function (string $handle): array {
+            if (!$handle) {
+                return [];
+            }
+            $entityManager = $this->getEntityManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('u.handle')
+                         ->from(User::class, 'u')
+                         ->where(
+                             $queryBuilder->expr()->like(
+                                 'u.handle',
+                                 ':handle',
+                             ),
+                         )
+                         ->setParameter(
+                             'handle',
+                             $handle . '%',
+                         );
+
+            return array_map(
+                fn (array $user): string => $user['handle'],
+                $queryBuilder
+                    ->getQuery()
+                    ->getResult(),
+            );
+        };
+    }
 }
