@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Command\User;
 
-use Doctrine\ORM\EntityManagerInterface;
 use KaLehmann\UnlockedServer\Model\User;
 use KaLehmann\UnlockedServer\Repository\UserRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -39,13 +38,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class ListUserCommand extends Command
 {
-    private UserRepository $userRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
+        private UserRepository $userRepository,
     ) {
-        $this->userRepository = $entityManager->getRepository(User::class);
-
         parent::__construct();
     }
 
