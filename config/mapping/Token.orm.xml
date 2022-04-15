@@ -6,6 +6,7 @@
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity
       name="KaLehmann\UnlockedServer\Model\Token"
+      repository-class="KaLehmann\UnlockedServer\Repository\TokenRepository"
       table="tokens">
     <field
         column="description"

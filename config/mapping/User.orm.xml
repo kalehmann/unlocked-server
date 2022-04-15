@@ -6,6 +6,7 @@
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity
       name="KaLehmann\UnlockedServer\Model\User"
+      repository-class="KaLehmann\UnlockedServer\Repository\UserRepository"
       table="users">
     <field
         column="email"

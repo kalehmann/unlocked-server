@@ -6,6 +6,7 @@
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity
       name="KaLehmann\UnlockedServer\Model\Key"
+      repository-class="KaLehmann\UnlockedServer\Repository\KeyRepository"
       table="keys">
     <fieldz
         column="deleted"

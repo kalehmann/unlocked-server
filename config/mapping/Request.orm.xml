@@ -4,7 +4,10 @@
     xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="KaLehmann\UnlockedServer\Model\Request" table="requests">
+  <entity
+      name="KaLehmann\UnlockedServer\Model\Request"
+      repository-class="KaLehmann\UnlockedServer\Repository\RequestRepository"
+      table="requests">
     <field
         column="created"
         name="created"
