@@ -20,10 +20,18 @@ security:
                 KaLehmann\UnlockedServer\Model\User: "auto"
                 Symfony\Component\Security\Core\User\InMemoryUser: "plaintext"
         providers:
+                api_provider:
+                        chain:
+                                providers:
+                                        - 'application_clients'
+                                        - 'application_users'
+                application_clients:
+                        entity:
+                                class: "KaLehmann\\UnlockedServer\\Model\\Client"
+                                property: "handle"
                 application_users:
                         entity:
                                 class: "KaLehmann\\UnlockedServer\\Model\\User"
-                                property: "handle"
                 maintenance_users:
                         memory:
                                 users:

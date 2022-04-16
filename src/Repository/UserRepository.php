@@ -25,12 +25,15 @@ namespace KaLehmann\UnlockedServer\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use KaLehmann\UnlockedServer\Model\Token;
 use KaLehmann\UnlockedServer\Model\User;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
  */
 class UserRepository extends ServiceEntityRepository
+    implements UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -68,5 +71,26 @@ class UserRepository extends ServiceEntityRepository
                     ->getResult(),
             );
         };
+    }
+
+    public function loadUserByIdentifier(string $identifier): ?User
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->leftJoin(
+            'u.tokens',
+            't',
+        )->where(
+            $qb->expr()->orX(
+                $qb->expr()->eq('t.id', ':identifier'),
+                $qb->expr()->eq('u.handle', ':identifier'),
+            ),
+        )->setParameter('identifier', $identifier);
+
+        $user = $qb->getQuery()->getOneOrNullResult();
+        if (false === $user instanceof User) {
+            return null;
+        }
+
+        return $user;
     }
 }

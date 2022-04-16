@@ -25,8 +25,9 @@ namespace KaLehmann\UnlockedServer\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class Client
+class Client implements UserInterface
 {
     private bool $deleted = false;
 
@@ -74,6 +75,10 @@ class Client
         $this->description = $description;
     }
 
+    public function eraseCredentials(): void
+    {
+    }
+
     public function getHandle(): string
     {
         return $this->handle;
@@ -101,6 +106,11 @@ class Client
         $this->requests->removeElement($request);
     }
 
+    public function getRoles(): array
+    {
+        return ['ROLE_CLIENT'];
+    }
+
     public function getSecret(): string
     {
         return $this->secret;
@@ -109,5 +119,10 @@ class Client
     public function getUser(): User
     {
         return $this->user;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->handle;
     }
 }
