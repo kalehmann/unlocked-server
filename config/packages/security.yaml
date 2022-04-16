@@ -27,7 +27,7 @@ security:
                                         - 'application_users'
                 application_clients:
                         entity:
-                                class: "KaLehmann\\UnlockedServer\\Model\\Client"
+                                class: 'KaLehmann\UnlockedServer\Model\Client'
                                 property: "handle"
                 application_users:
                         entity:
