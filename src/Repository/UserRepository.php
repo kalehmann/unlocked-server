@@ -32,8 +32,8 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 /**
  * @extends ServiceEntityRepository<User>
  */
-class UserRepository extends ServiceEntityRepository
-    implements UserLoaderInterface
+class UserRepository extends ServiceEntityRepository implements
+    UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
