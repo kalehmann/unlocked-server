@@ -25,6 +25,16 @@ namespace KaLehmann\UnlockedServer\Model;
 
 class Request
 {
+    public const STATE_ACCEPTED = 'ACCEPTED';
+
+    public const STATE_DENIED = 'DENIED';
+
+    public const STATE_EXPIRED = 'EXPIRED';
+
+    public const STATE_FULFILLED = 'FULFILLED';
+
+    public const STATE_PENDING = 'PENDING';
+
     private Client $client;
 
     private int $created;
@@ -39,7 +49,7 @@ class Request
 
     private ?int $processed = null;
 
-    private string $state;
+    private string $state = self::PENDING;
 
     private User $user;
 
