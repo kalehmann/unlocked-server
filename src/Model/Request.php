@@ -49,7 +49,7 @@ class Request
 
     private ?int $processed = null;
 
-    private string $state = self::PENDING;
+    private string $state = self::STATE_PENDING;
 
     private User $user;
 
