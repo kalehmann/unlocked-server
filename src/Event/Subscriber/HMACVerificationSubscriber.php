@@ -68,7 +68,8 @@ class HMACVerificationSubscriber implements EventSubscriberInterface
 
         $dataToSign = '';
         foreach ($hmacBadge->getHeaders() as $headerName => $header) {
-            $dataToSign .= $headerName . ': ' . $header . PHP_EOL;
+            $dataToSign .= ucfirst($headerName) . ': ' . $header .
+                        PHP_EOL;
         }
         $dataToSign .= $hmacBadge->getMessage();
 
