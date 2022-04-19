@@ -126,4 +126,20 @@ class Request
     {
         return $this->user;
     }
+
+    /**
+     * @return array<string, null|scalar>
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'client' => $this->getClient()->getHandle(),
+            'key' => $this->getKey()->getHandle(),
+            'state' => $this->getState(),
+            'created' => $this->getCreated(),
+            'processed' => $this->getProcessed(),
+            'fulfilled' => $this->getFulfilled(),
+        ];
+    }
 }
