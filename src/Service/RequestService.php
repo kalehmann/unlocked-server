@@ -68,4 +68,20 @@ class RequestService
 
         return $request;
     }
+
+    public function denyRequest(
+        Request $request,
+    ): void {
+        if (Request::STATE_PENDING !== $request->getState()) {
+            throw new \RuntimeException(
+                'Could not deny request "' . $request->getId() .
+                '" - only a pending request can be denied',
+            );
+        }
+        $request->setState(Request::STATE_DENIED);
+        $request->setProcessed(time());
+
+        $this->entityManager->persist($request);
+        $this->entityManager->flush();
+    }
 }
