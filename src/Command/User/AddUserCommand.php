@@ -94,7 +94,7 @@ class AddUserCommand extends Command
             );
         }
         $phone = $input->getOption('phone');
-        if (false === is_string($phone)) {
+        if ($phone && false === is_string($phone)) {
             throw new \RuntimeException('Expected `phone` to be a type string');
         }
         $user = new User($handle);
