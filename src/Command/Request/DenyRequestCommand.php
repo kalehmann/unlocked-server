@@ -61,7 +61,7 @@ class DenyRequestCommand extends Command
     ): int {
         $io = new SymfonyStyle($input, $output);
         $requestId = $input->getArgument('request-id');
-        if (false === ctype_digit($requestId)) {
+        if (false === is_numeric($requestId)) {
             $io->error('The id of the request must be numeric!');
 
             return Command::FAILURE;
