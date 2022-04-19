@@ -35,6 +35,22 @@ class RequestService
     ) {
     }
 
+    public function acceptRequest(
+        Request $request,
+    ): void {
+        if (Request::STATE_PENDING !== $request->getState()) {
+            throw new \RuntimeException(
+                'Could not accept request "' . $request->getId() .
+                '" - only a pending request can be accepted',
+            );
+        }
+        $request->setState(Request::STATE_ACCEPTED);
+        $request->setProcessed(time());
+
+        $this->entityManager->persist($request);
+        $this->entityManager->flush();
+    }
+
     public function createRequest(
         Client $client,
         Key $key,
