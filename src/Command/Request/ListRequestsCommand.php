@@ -48,7 +48,9 @@ class ListRequestsCommand extends Command
         InputInterface $input,
         OutputInterface $output,
     ): int {
-        $requests = $this->requestRepository->findAll();
+        $requests = array_reverse(
+            $this->requestRepository->findAll(),
+        );
         $table = new Table($output);
         $table->setHeaderTitle('Requests');
         $table->setHeaders(
