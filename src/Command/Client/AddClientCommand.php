@@ -35,6 +35,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
     name: 'unlocked:client:add',
@@ -46,6 +47,7 @@ class AddClientCommand extends Command
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserRepository $userRepository,
+        private ValidatorInterface $validator,
     ) {
         parent::__construct();
     }
@@ -81,6 +83,7 @@ class AddClientCommand extends Command
         InputInterface $input,
         OutputInterface $output,
     ): int {
+        $io = new SymfonyStyle($input, $output);
         $description = $input->getOption('description');
         if (false === is_string($description)) {
             throw new \RuntimeException(
@@ -117,8 +120,26 @@ class AddClientCommand extends Command
         if ($description) {
             $client->setDescription($description);
         }
+        $errors = $this->validator->validate($client);
+        if (count($errors) > 0) {
+            $errorStr = '';
+            foreach ($errors as $violation) {
+                $root = $violation->getRoot();
+                if (is_object($root)) {
+                    $errorStr .= get_class($root) . '::' .
+                        $violation->getPropertyPath() . ' : ';
+                }
+                $errorStr .= $violation->getMessage() . PHP_EOL;
+            }
+            $io->error($errorStr);
+
+            return Command::FAILURE;
+        }
+
         $this->entityManager->persist($client);
         $this->entityManager->flush();
+
+        $io->success('Created client.');
 
         return Command::SUCCESS;
     }

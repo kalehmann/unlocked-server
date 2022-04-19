@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping
+    xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+                        https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+  <class name="KaLehmann\UnlockedServer\Model\Client">
+    <property name="handle">
+      <constraint name="Regex">
+        <option name="pattern">/^[a-zA-Z0-9\-_]{8,64}$/</option>
+      </constraint>
+    </property>
+    <property name="secret">
+      <constraint name="Length">
+        <option name="min">8</option>
+      </constraint>
+      <constraint name="NotBlank"/>
+    </property>
+  </class>
+  <class name="KaLehmann\UnlockedServer\Model\Key">
+    <property name="handle">
+      <constraint name="Regex">
+        <option name="pattern">/^[a-zA-Z0-9\-_]{8,64}$/</option>
+      </constraint>
+    </property>
+  </class>
+  <class name="KaLehmann\UnlockedServer\Model\User">
+    <property name="email">
+      <constraint name="Email">
+        <option name="mode">html5</option>
+      </constraint>
+    </property>
+    <property name="handle">
+      <constraint name="Regex">
+        <option name="pattern">/^[a-zA-Z0-9\-_]{8,64}$/</option>
+      </constraint>
+    </property>
+  </class>
+</constraint-mapping>

@@ -33,6 +33,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
     name: 'unlocked:user:add',
@@ -44,6 +45,7 @@ class AddUserCommand extends Command
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
+        private ValidatorInterface $validator,
     ) {
         parent::__construct();
     }
@@ -79,6 +81,7 @@ class AddUserCommand extends Command
         InputInterface $input,
         OutputInterface $output,
     ): int {
+        $io = new SymfonyStyle($input, $output);
         $email = $input->getOption('email');
         if (false === is_string($email)) {
             throw new \RuntimeException('Expected `email` to be a type string');
@@ -108,8 +111,26 @@ class AddUserCommand extends Command
         if ($phone) {
             $user->setMobile($phone);
         }
+        $errors = $this->validator->validate($user);
+        if (count($errors) > 0) {
+            $errorStr = '';
+            foreach ($errors as $violation) {
+                $root = $violation->getRoot();
+                if (is_object($root)) {
+                    $errorStr .= get_class($root) . '::' .
+                        $violation->getPropertyPath() . ' : ';
+                }
+                $errorStr .= $violation->getMessage() . PHP_EOL;
+            }
+            $io->error($errorStr);
+
+            return Command::FAILURE;
+        }
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        $io->success('Created user.');
 
         return Command::SUCCESS;
     }

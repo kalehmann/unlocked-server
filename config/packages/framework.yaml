@@ -7,4 +7,8 @@ framework:
                 handler_id: null
         translator:
                 default_path: '%kernel.project_dir%/translations'
+        validation:
+                mapping:
+                        paths:
+                                - '%kernel.project_dir%/config/validation/'
 ...
