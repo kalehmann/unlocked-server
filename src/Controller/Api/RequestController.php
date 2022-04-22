@@ -25,12 +25,14 @@ namespace KaLehmann\UnlockedServer\Controller\Api;
 
 use KaLehmann\UnlockedServer\Model\Client;
 use KaLehmann\UnlockedServer\Repository\KeyRepository;
+use KaLehmann\UnlockedServer\Repository\RequestRepository;
 use KaLehmann\UnlockedServer\Service\RequestService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RequestController extends AbstractController
 {
@@ -82,6 +84,42 @@ class RequestController extends AbstractController
         }
 
         $request = $requestService->createRequest($client, $key);
+
+        return new JsonResponse(
+            $request->toArray(),
+            Response::HTTP_CREATED,
+        );
+    }
+
+    public function show(
+        RequestRepository $requestRepository,
+        int $id,
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_CLIENT');
+        $client = $this->getUser();
+        if (null === $client) {
+            throw new \RuntimeException(
+                'Unable to get current user',
+            );
+        }
+        if (false === $client instanceof Client) {
+            throw new \RuntimeException(
+                'Expected user to be a client, got "' .
+                get_class($client) . '"',
+            );
+        }
+        $request = $requestRepository->find($id);
+        if (null === $request) {
+            throw new NotFoundHttpException(
+                'No request with id ' . $id . ' found',
+            );
+        }
+        if ($request->getClient() !== $client) {
+            throw new BadRequestHttpException(
+                'Request "' . $request->getId() . '" is inaccessible by the ' .
+                'client "' . $client->getHandle() . '"',
+            );
+        }
 
         return new JsonResponse(
             $request->toArray(),
