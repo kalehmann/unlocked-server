@@ -21,6 +21,10 @@ request_create:
         path: '/api/requests'
         controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::create'
         methods: 'POST'
+request_patch:
+        path: '/api/requests/{id}'
+        controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::patch'
+        methods: 'PATCH'
 request_show:
         path: '/api/requests/{id}'
         controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::show'

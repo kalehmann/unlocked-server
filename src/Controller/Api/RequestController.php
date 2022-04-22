@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller\Api;
 
 use KaLehmann\UnlockedServer\Model\Client;
+use KaLehmann\UnlockedServer\Model\Request as RequestModel;
 use KaLehmann\UnlockedServer\Repository\KeyRepository;
 use KaLehmann\UnlockedServer\Repository\RequestRepository;
 use KaLehmann\UnlockedServer\Service\RequestService;
@@ -88,6 +89,61 @@ class RequestController extends AbstractController
         return new JsonResponse(
             $request->toArray(),
             Response::HTTP_CREATED,
+        );
+    }
+
+    public function patch(
+        Request $request,
+        RequestRepository $requestRepository,
+        RequestService $requestService,
+        int $id,
+    ): Response {
+        $this->denyAccessUnlessGranted('ROLE_CLIENT');
+        if ('json' !== $request->getContentType()) {
+            throw new BadRequestHttpException(
+                'Content type is not json',
+            );
+        }
+
+        $body = json_decode((string) $request->getContent(), true);
+        if (false === $body || false === is_array($body)) {
+            throw new BadRequestHttpException(
+                'Could not decode request body',
+            );
+        }
+        [
+            'state' => $newState,
+        ] = $body;
+        $client = $this->getUser();
+        if (null === $client) {
+            throw new \RuntimeException(
+                'Unable to get current user',
+            );
+        }
+        if (false === $client instanceof Client) {
+            throw new \RuntimeException(
+                'Expected user to be a client, got "' .
+                get_class($client) . '"',
+            );
+        }
+        $request = $requestRepository->find($id);
+        if (null === $request) {
+            throw new NotFoundHttpException(
+                'No request with id ' . $id . ' found',
+            );
+        }
+        if ($request->getClient() !== $client) {
+            throw new BadRequestHttpException(
+                'Request "' . $request->getId() . '" is inaccessible by the ' .
+                'client "' . $client->getHandle() . '"',
+            );
+        }
+        if ($newState !== RequestModel::STATE_FULFILLED) {
+            throw new BadRequestHttpException('Invalid state change');
+        }
+
+        return new Response(
+            $requestService->fulfillRequest($request),
         );
     }
 

@@ -84,4 +84,23 @@ class RequestService
         $this->entityManager->persist($request);
         $this->entityManager->flush();
     }
+
+    public function fulfillRequest(
+        Request $request,
+    ): string {
+        if (Request::STATE_ACCEPTED !== $request->getState()) {
+            throw new \RuntimeException(
+                'Could not fulfill request "' . $request->getId() .
+                '" as it was not accepted',
+            );
+        }
+
+        $request->setState(Request::STATE_FULFILLED);
+        $request->setFulfilled(time());
+
+        $this->entityManager->persist($request);
+        $this->entityManager->flush();
+
+        return $request->getKey()->getKey();
+    }
 }
