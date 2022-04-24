@@ -23,6 +23,18 @@ maintenance:
                 info: 'Server Informationen'
                 php_version: 'PHP Version'
                 php_version_error: 'Nicht unterstützte PHP Version'
+request:
+        created: 'Erstellt'
+        expires: 'Abgelaufen'
+        fulfilled: 'Erfüllt'
+        id: 'ID'
+        key: 'Schlüssel'
+        processed: 'Abgearbeitet'
+        state: 'Status'
 unlocked:
+        client: 'Klienten'
+        key: 'Schlüssel'
+        request: 'Anfragen'
+        user: 'Nutzer'
         title: 'UИLOCKED'
 ...

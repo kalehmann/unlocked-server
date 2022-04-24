@@ -1,0 +1,71 @@
+{% extends 'backend.html.twig' %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>
+        <div class="icon-cell">
+          {% trans %}request.id{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          <span class="icon-20 icon-key"></span>
+          {% trans %}request.key{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}request.state{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}request.created{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}request.expires{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}request.processed{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}request.fulfilled{% endtrans %}
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for request in requests %}
+    <tr>
+      <td>{{ request.id }}</td>
+      <td>{{ request.key.handle }}</td>
+      <td>{{ request.state }}</td>
+      <td>{{ request.created|date() }}</td>
+      <td>{{ request.expires|date() }}</td>
+      <td>
+        {% if request.processed %}
+        {{ request.processed|date() }}
+        {% else %}
+        -
+        {% endif %}
+      </td>
+      <td>
+        {% if request.fulfilled %}
+        {{ request.fulfilled|date() }}
+        {% else %}
+        -
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,5 +1,17 @@
 # yamllint disable rule:line-length
 ---
+api_request_create:
+        path: '/api/requests'
+        controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::create'
+        methods: 'POST'
+api_request_patch:
+        path: '/api/requests/{id}'
+        controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::patch'
+        methods: 'PATCH'
+api_request_show:
+        path: '/api/requests/{id}'
+        controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::show'
+        methods: 'GET'
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'
@@ -20,16 +32,7 @@ maintenance_migrate:
 maintenance_status:
         path: '/maintenance/status'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::status'
-request_create:
-        path: '/api/requests'
-        controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::create'
-        methods: 'POST'
-request_patch:
-        path: '/api/requests/{id}'
-        controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::patch'
-        methods: 'PATCH'
-request_show:
-        path: '/api/requests/{id}'
-        controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::show'
-        methods: 'GET'
+requests_list:
+        path: '/requests'
+        controller: 'KaLehmann\UnlockedServer\Controller\RequestController::list'
 ...

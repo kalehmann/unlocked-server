@@ -5,31 +5,35 @@ set menu = [
   {
     'class': 'icon-64 icon-client',
     'title': 'unlocked.client',
+    'url': '#',
   },
   {
     'class': 'icon-64 icon-key',
     'title': 'unlocked.key',
+    'url': '#',
   },
   {
     'class': 'icon-64 icon-request',
     'title': 'unlocked.request',
+    'url': path('requests_list'),
   },
   {
     'class': 'icon-64 icon-user',
     'title': 'unlocked.user',
+    'url': '#',
   },
 ]
 %}
 {% block page %}
 <header>
   <span class="unlocked-title">{{ 'unlocked.title'|trans }}</span>
-  <span class="unlocked-requests">{{ activeRequests() }} active requests</span>
+  <a class="clickable unlocked-requests" href="{{ path('requests_list') }}">{{ activeRequests() }} active requests</a>
 </header>
 
 <nav>
   <ul>
     {% for entry in menu %}
-    <li><a class="menu-item" href="#"><span class="{{ entry.class }}"></span>{{ entry.title|trans() }}</a></li>
+    <li><a class="menu-item" href="{{ entry.url }}"><span class="{{ entry.class }}"></span>{{ entry.title|trans() }}</a></li>
     {% endfor %}
   </ul>
 </nav>

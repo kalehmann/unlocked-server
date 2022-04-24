@@ -4,11 +4,13 @@ header {
 
 .unlocked-requests {
     border-bottom: 2px solid black;
+    color: $foreground-color;
     display: inline-block;
     flex-grow: 1;
     height: 2.5rem;
     line-height: 2.5rem;
     text-align: center;
+    text-decoration: none;
     width: auto;
 }
 

@@ -22,3 +22,12 @@ $icon-sizes: (20, 32, 64, 128);
 	width: #{$size}px;
     }
 }
+
+th > .icon-cell {
+    align-items: center;
+    display: flex;
+
+    & > *:first-child {
+	margin-right: 0.5em;
+    }
+}

@@ -23,10 +23,18 @@ maintenance:
                 info: 'Server information'
                 php_version: 'PHP version'
                 php_version_error: 'Unsupported PHP version'
-unlocked:
-        client: 'Client'
+request:
+        created: 'Created'
+        expires: 'Expired'
+        fulfilled: 'Fulfilled'
+        id: 'ID'
         key: 'Key'
-        request: 'Request'
-        user: 'User'
+        processed: 'Processed'
+        state: 'State'
+unlocked:
+        client: 'Clients'
+        key: 'Keys'
+        request: 'Requests'
+        user: 'Users'
         title: 'UИLOCKED'
 ...

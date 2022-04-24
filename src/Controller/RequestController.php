@@ -23,13 +23,30 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Controller;
 
+use KaLehmann\UnlockedServer\Repository\RequestRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class IndexController extends AbstractController
+class RequestController extends AbstractController
 {
-    public function index(): Response
-    {
-        return $this->render('index.html.twig');
+    public function list(
+        RequestRepository $requestRepository,
+    ): Response {
+        $user = $this->getUser();
+        $requests = $requestRepository->findBy(
+            [
+                'user' => $user,
+            ],
+            [
+                'created' => 'DESC'
+            ],
+        );
+
+        return $this->render(
+            'requests/list.html.twig',
+            [
+                'requests' => $requests,
+            ],
+        );
     }
 }
