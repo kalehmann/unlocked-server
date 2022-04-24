@@ -30,7 +30,8 @@ final class Version20220410222214 extends AbstractMigration
         );
         $this->addSql(
             'CREATE TABLE keys ' .
-            '(handle VARCHAR(255) NOT NULL,' .
+            '(deleted BOOLEAN NOT NULL,' .
+            ' handle VARCHAR(255) NOT NULL,' .
             ' user_handle VARCHAR(255) DEFAULT NULL,' .
             ' description VARCHAR(255) NOT NULL,' .
             ' "key" VARCHAR(255) NOT NULL,' .

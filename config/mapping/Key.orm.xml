@@ -8,7 +8,7 @@
       name="KaLehmann\UnlockedServer\Model\Key"
       repository-class="KaLehmann\UnlockedServer\Repository\KeyRepository"
       table="keys">
-    <fieldz
+    <field
         column="deleted"
         default="false"
         name="deleted"
