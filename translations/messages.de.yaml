@@ -23,4 +23,6 @@ maintenance:
                 info: 'Server Informationen'
                 php_version: 'PHP Version'
                 php_version_error: 'Nicht unterstützte PHP Version'
+unlocked:
+        title: 'UИLOCKED'
 ...

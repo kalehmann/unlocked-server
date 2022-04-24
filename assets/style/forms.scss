@@ -56,11 +56,12 @@ label {
     position: relative;
 
     &::after {
-	background-size: contain;
 	bottom: 0.4em;
 	content: " ";
 	display: block;
 	height: 20px;
+	-webkit-mask-size: contain;
+	mask-size: contain;
 	position: absolute;
 	right: 0.2em;
 	width: 20px;
@@ -70,15 +71,15 @@ label {
 .secret-input {
     &::after {
 	background-color: #b6b6b6;
-	-webkit-mask-image: url("../icon/secret-20.svg");
-	mask-image: url("../icon/secret-20.svg");
+	-webkit-mask-image: url("../icon/secret.svg");
+	mask-image: url("../icon/secret.svg");
     }
 }
 
 .user-input {
     &::after {
 	background-color: #b6b6b6;
-	-webkit-mask-image: url("../icon/user-20.svg");
-	mask-image: url("../icon/user-20.svg");
+	-webkit-mask-image: url("../icon/user.svg");
+	mask-image: url("../icon/user.svg");
     }
 }

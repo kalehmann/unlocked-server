@@ -23,4 +23,10 @@ maintenance:
                 info: 'Server information'
                 php_version: 'PHP version'
                 php_version_error: 'Unsupported PHP version'
+unlocked:
+        client: 'Client'
+        key: 'Key'
+        request: 'Request'
+        user: 'User'
+        title: 'UИLOCKED'
 ...

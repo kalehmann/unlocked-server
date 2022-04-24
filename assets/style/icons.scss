@@ -1,0 +1,20 @@
+$icon-names: (client, delete, edit, key, request, secret, user);
+$icon-sizes: (20, 32, 64, 128);
+
+@each $name in $icon-names {
+    .icon-#{$name} {
+	background-color: white;
+	display: inline-block;
+	-webkit-mask-image: url("../icon/#{$name}.svg");
+	mask-image: url("../icon/#{$name}.svg");
+	-webkit-mask-size: contain;
+	mask-size: contain;
+    }
+}
+
+@each $size in $icon-sizes {
+    .icon-#{$size} {
+	height: #{$size}px;
+	width: #{$size}px;
+    }
+}

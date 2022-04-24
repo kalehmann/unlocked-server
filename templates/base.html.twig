@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ title|default("UИLOCKED") }}</title>
+    <title>{{ title|default('unlocked.title'|trans) }}</title>
     <link rel="stylesheet" type="text/css" href="/assets/style.css">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
   </head>
   <body>
     {% block body %}
     <main>
-      {% block content %}
+      {% block page %}
 
       {% endblock %}
     </main>
