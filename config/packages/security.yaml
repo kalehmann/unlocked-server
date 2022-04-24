@@ -2,10 +2,18 @@
 ---
 security:
         access_control:
+                api:
+                        path: "^/api"
+                        roles:
+                                - "ROLE_CLIENT"
                 maintenance:
                         path: "^/maintenance"
                         roles:
                                 - "ROLE_ADMIN"
+                main:
+                        path: "^/.+"
+                        roles:
+                                - "ROLE_USER"
         firewalls:
                 api:
                         custom_authenticators:
@@ -19,8 +27,11 @@ security:
                 main:
                         form_login:
                                 check_path: "login"
+                                default_target_path: "requests_list"
                                 enable_csrf: true
                                 login_path: "login"
+                        logout:
+                                path: "logout"
                         provider: "application_users"
         password_hashers:
                 KaLehmann\UnlockedServer\Model\User: "auto"

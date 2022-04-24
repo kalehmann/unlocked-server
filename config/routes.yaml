@@ -3,12 +3,12 @@
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'
-index:
-        path: '/'
-        controller: 'KaLehmann\UnlockedServer\Controller\IndexController::index'
 login:
-        path: '/login'
+        path: '/'
         controller: 'KaLehmann\UnlockedServer\Controller\LoginController::login'
+logout:
+        path: '/logout'
+        methods: 'GET'
 maintenance_init_db:
         path: '/maintenance/init_db'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::initDb'
