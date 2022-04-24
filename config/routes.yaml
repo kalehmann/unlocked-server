@@ -21,6 +21,9 @@ login:
 logout:
         path: '/logout'
         methods: 'GET'
+keys_list:
+        path: '/keys'
+        controller: 'KaLehmann\UnlockedServer\Controller\KeyController::list'
 maintenance_init_db:
         path: '/maintenance/init_db'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::initDb'

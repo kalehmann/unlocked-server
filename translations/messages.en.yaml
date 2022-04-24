@@ -1,4 +1,7 @@
 ---
+key:
+        description: 'Description'
+        handle: 'Handle'
 maintenance:
         command:
                 back: 'Go back'

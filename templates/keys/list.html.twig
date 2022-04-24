@@ -1,0 +1,29 @@
+{% extends 'backend.html.twig' %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>
+        <div class="icon-cell">
+          {% trans %}key.handle{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          <span class="icon-20 icon-key"></span>
+          {% trans %}key.description{% endtrans %}
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key in keys %}
+    <tr>
+      <td>{{ key.handle }}</td>
+      <td>{{ key.description }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
