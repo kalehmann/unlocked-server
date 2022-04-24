@@ -52,7 +52,7 @@ class HMACAuthenticator extends AbstractAuthenticator
         }
 
         $headerIsValid = preg_match(
-            '/^hmac username="(?<username>[a-zA-Z0-9]+)", ' .
+            '/^hmac username="(?<username>[a-zA-Z0-9\-_]+)", ' .
             'algorithm="(?<algorithm>[a-z0-9-,]+)", ' .
             'headers="(?<headers>[a-z\-\s]+)", ' .
             'signature="(?<signature>[a-zA-Z0-9\+\/=]+)"$/',
