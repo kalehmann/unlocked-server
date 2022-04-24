@@ -3,6 +3,9 @@
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'
+index:
+        path: '/'
+        controller: 'KaLehmann\UnlockedServer\Controller\IndexController::index'
 login:
         path: '/login'
         controller: 'KaLehmann\UnlockedServer\Controller\LoginController::login'

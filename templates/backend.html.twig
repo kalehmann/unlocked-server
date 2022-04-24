@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{%
+set menu = [
+  {
+    'class': 'icon-64 icon-client',
+    'title': 'unlocked.client',
+  },
+  {
+    'class': 'icon-64 icon-key',
+    'title': 'unlocked.key',
+  },
+  {
+    'class': 'icon-64 icon-request',
+    'title': 'unlocked.request',
+  },
+  {
+    'class': 'icon-64 icon-user',
+    'title': 'unlocked.user',
+  },
+]
+%}
+{% block page %}
+<header>
+  <span class="unlocked-title">{{ 'unlocked.title'|trans }}</span>
+  <span class="unlocked-requests">{{ activeRequests() }} active requests</span>
+</header>
+
+<nav>
+  <ul>
+    {% for entry in menu %}
+    <li><a class="menu-item" href="#"><span class="{{ entry.class }}"></span>{{ entry.title|trans() }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% block content %}
+
+{% endblock %}
+{% endblock %}

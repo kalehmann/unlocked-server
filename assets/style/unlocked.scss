@@ -1,0 +1,38 @@
+header {
+    display: flex;
+}
+
+.unlocked-requests {
+    border-bottom: 2px solid black;
+    display: inline-block;
+    flex-grow: 1;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    width: auto;
+}
+
+.unlocked-title {
+    background-color: black;
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: bolder;
+    height: 3rem;
+    line-height: 3rem;
+    min-width: 30%;
+    position: relative;
+    text-align: center;
+
+    &::after {
+	border-color: black black transparent black;
+	border-style: solid;
+	border-width: 0 0 3rem 1rem;
+	bottom: 0;
+	content: '';
+	height: 0;
+	position: absolute;
+	right: -1rem;
+	width: 0;
+	z-index: 1;
+    }
+}

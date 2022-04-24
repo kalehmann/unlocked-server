@@ -3,12 +3,16 @@ $icon-sizes: (20, 32, 64, 128);
 
 @each $name in $icon-names {
     .icon-#{$name} {
-	background-color: white;
+	background-color: $foreground-color;
 	display: inline-block;
 	-webkit-mask-image: url("../icon/#{$name}.svg");
 	mask-image: url("../icon/#{$name}.svg");
 	-webkit-mask-size: contain;
 	mask-size: contain;
+    }
+
+    .clickable:hover .icon-#{$name} {
+	background-color: $background-color;
     }
 }
 
