@@ -36,7 +36,6 @@ class ActiveRequestsExtension extends AbstractExtension
         private RequestRepository $requestRepository,
         private Security $security,
     ) {
-
     }
 
     public function getFunctions(): array
