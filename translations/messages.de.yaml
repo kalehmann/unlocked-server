@@ -1,4 +1,7 @@
 ---
+client:
+        description: 'Beschreibung'
+        handle: 'Handle'
 key:
         description: 'Beschreibung'
         handle: 'Handle'

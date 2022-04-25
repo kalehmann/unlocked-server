@@ -12,6 +12,9 @@ api_request_show:
         path: '/api/requests/{id}'
         controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::show'
         methods: 'GET'
+clients_list:
+        path: '/clients'
+        controller: 'KaLehmann\UnlockedServer\Controller\ClientController::list'
 hello:
         path: '/hello'
         controller: 'KaLehmann\UnlockedServer\Action\HelloAction'

@@ -1,0 +1,29 @@
+{% extends 'backend.html.twig' %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>
+        <div class="icon-cell">
+          {% trans %}client.handle{% endtrans %}
+        </div>
+      </th>
+      <th>
+        <div class="icon-cell">
+          <span class="icon-20 icon-key"></span>
+          {% trans %}client.description{% endtrans %}
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for client in clients %}
+    <tr>
+      <td>{{ client.handle }}</td>
+      <td>{{ client.description }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
