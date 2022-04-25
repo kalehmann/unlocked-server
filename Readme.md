@@ -66,7 +66,7 @@ docker-compose down -v
 For node packages run
 
 ```
-docker-compose yarn add <package>
+docker-compose run yarn add <package>
 ```
 
 
