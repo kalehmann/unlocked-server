@@ -53,22 +53,28 @@ class RequestController extends AbstractController
             if ($isSubmitted) {
                 $logger->warning(
                     'Request to "' .
-                    $urlGenerator->generate('requests_accept') .
+                    $this->generateUrl('requests_accept') .
                     '" with invalid form',
                 );
             } else {
                 $logger->warning(
                     'Request to "' .
-                    $urlGenerator->generate('requests_accept') .
+                    $this->generateUrl('requests_accept') .
                     '" but form was not submitted',
                 );
             }
 
             return new RedirectResponse(
-                $urlGenerator->generate('requests_list'),
+                $this->generateUrl('requests_list'),
             );
         }
-        ['request_id' => $id] = $form->getData();
+        $formData = $form->getData();
+        if (false === is_array($formData)) {
+            throw new \RuntimeException(
+                'Expected form data to be an array, got ' . gettype($formData),
+            );
+        }
+        ['request_id' => $id] = $formData;
         $request = $requestRepository->find($id);
         if (null === $request) {
             throw new NotFoundHttpException();
@@ -96,22 +102,28 @@ class RequestController extends AbstractController
             if ($isSubmitted) {
                 $logger->warning(
                     'Request to "' .
-                    $urlGenerator->generate('requests_deny') .
+                    $this->generateUrl('requests_deny') .
                     '" with invalid form',
                 );
             } else {
                 $logger->warning(
                     'Request to "' .
-                    $urlGenerator->generate('requests_deny') .
+                    $this->generateUrl('requests_deny') .
                     '" but form was not submitted',
                 );
             }
 
             return new RedirectResponse(
-                $urlGenerator->generate('requests_list'),
+                $this->generateUrl('requests_list'),
             );
         }
-        ['request_id' => $id] = $form->getData();
+        $formData = $form->getData();
+        if (false === is_array($formData)) {
+            throw new \RuntimeException(
+                'Expected form data to be an array, got ' . gettype($formData),
+            );
+        }
+        ['request_id' => $id] = $formData;
         $request = $requestRepository->find($id);
         if (null === $request) {
             throw new NotFoundHttpException();
