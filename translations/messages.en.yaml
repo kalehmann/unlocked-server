@@ -30,7 +30,10 @@ maintenance:
                 php_version: 'PHP version'
                 php_version_error: 'Unsupported PHP version'
 request:
+        accept: 'Accept'
+        actions: 'Actions'
         created: 'Created'
+        deny: 'Deny'
         expires: 'Expired'
         fulfilled: 'Fulfilled'
         id: 'ID'

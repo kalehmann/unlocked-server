@@ -38,6 +38,12 @@ maintenance_migrate:
 maintenance_status:
         path: '/maintenance/status'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::status'
+requests_accept:
+        path: '/requests/accept'
+        controller: 'KaLehmann\UnlockedServer\Controller\RequestController::accept'
+requests_deny:
+        path: '/requests/deny'
+        controller: 'KaLehmann\UnlockedServer\Controller\RequestController::deny'
 requests_list:
         path: '/requests'
         controller: 'KaLehmann\UnlockedServer\Controller\RequestController::list'

@@ -23,12 +23,108 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Controller;
 
+use KaLehmann\UnlockedServer\Model\Request as RequestModel;
 use KaLehmann\UnlockedServer\Repository\RequestRepository;
+use KaLehmann\UnlockedServer\Service\RequestService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RequestController extends AbstractController
 {
+    public function accept(
+        LoggerInterface $logger,
+        Request $request,
+        RequestRepository $requestRepository,
+        RequestService $requestService,
+    ): Response {
+        $user = $this->getUser();
+        $form = $this->buildAcceptRequestForm();
+        $form->handleRequest($request);
+        $isSubmitted = $form->isSubmitted();
+        if (false === $isSubmitted || false === $form->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('requests_accept') .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('requests_accept') .
+                    '" but form was not submitted',
+                );
+            }
+
+            return new RedirectResponse(
+                $urlGenerator->generate('requests_list'),
+            );
+        }
+        ['request_id' => $id] = $form->getData();
+        $request = $requestRepository->find($id);
+        if (null === $request) {
+            throw new NotFoundHttpException();
+        }
+        if ($request->getUser() !== $user) {
+            throw new BadRequestHttpException();
+        }
+
+        $requestService->acceptRequest($request);
+
+        return $this->redirectToRoute('requests_list');
+    }
+
+    public function deny(
+        LoggerInterface $logger,
+        Request $request,
+        RequestRepository $requestRepository,
+        RequestService $requestService,
+    ): Response {
+        $user = $this->getUser();
+        $form = $this->buildAcceptRequestForm();
+        $form->handleRequest($request);
+        $isSubmitted = $form->isSubmitted();
+        if (false === $isSubmitted || false === $form->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('requests_deny') .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $urlGenerator->generate('requests_deny') .
+                    '" but form was not submitted',
+                );
+            }
+
+            return new RedirectResponse(
+                $urlGenerator->generate('requests_list'),
+            );
+        }
+        ['request_id' => $id] = $form->getData();
+        $request = $requestRepository->find($id);
+        if (null === $request) {
+            throw new NotFoundHttpException();
+        }
+        if ($request->getUser() !== $user) {
+            throw new BadRequestHttpException();
+        }
+
+        $requestService->denyRequest($request);
+
+        return $this->redirectToRoute('requests_list');
+    }
+
     public function list(
         RequestRepository $requestRepository,
     ): Response {
@@ -41,6 +137,23 @@ class RequestController extends AbstractController
                 'created' => 'DESC'
             ],
         );
+        $requests = array_map(
+            function (RequestModel $request): array {
+                $data = [
+                    'request' => $request,
+                ];
+                if (RequestModel::STATE_PENDING === $request->getState()) {
+                    $data['acceptForm'] = $this->buildAcceptRequestForm(
+                        $request,
+                    )->createView();
+                    $data['denyForm'] = $this->buildDenyRequestForm(
+                        $request,
+                    )->createView();
+                }
+                return $data;
+            },
+            $requests
+        );
 
         return $this->render(
             'requests/list.html.twig',
@@ -48,5 +161,53 @@ class RequestController extends AbstractController
                 'requests' => $requests,
             ],
         );
+    }
+
+    private function buildAcceptRequestForm(
+        ?RequestModel $request = null,
+    ): FormInterface {
+        return $this->createFormBuilder()
+                    ->add(
+                        'save',
+                        SubmitType::class,
+                        [
+                            'label' => 'request.accept',
+                        ],
+                    )
+                    ->add(
+                        'request_id',
+                        HiddenType::class,
+                        [
+                            'data' => $request?->getId(),
+                        ],
+                    )
+                    ->setAction(
+                        $this->generateUrl('requests_accept'),
+                    )
+                    ->getForm();
+    }
+
+    private function buildDenyRequestForm(
+        ?RequestModel $request = null,
+    ): FormInterface {
+        return $this->createFormBuilder()
+                    ->add(
+                        'save',
+                        SubmitType::class,
+                        [
+                            'label' => 'request.deny',
+                        ],
+                    )
+                    ->add(
+                        'request_id',
+                        HiddenType::class,
+                        [
+                            'data' => $request?->getId(),
+                        ],
+                    )
+                    ->setAction(
+                        $this->generateUrl('requests_deny'),
+                    )
+                    ->getForm();
     }
 }

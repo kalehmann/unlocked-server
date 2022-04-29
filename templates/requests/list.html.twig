@@ -40,10 +40,18 @@
           {% trans %}request.fulfilled{% endtrans %}
         </div>
       </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}request.actions{% endtrans %}
+        </div>
+      </th>
     </tr>
   </thead>
   <tbody>
-    {% for request in requests %}
+    {% for data in requests %}
+    {% set acceptForm = data.acceptForm|default(null) %}
+    {% set denyForm = data.denyForm|default(null) %}
+    {% set request = data.request %}
     <tr>
       <td>{{ request.id }}</td>
       <td>{{ request.key.handle }}</td>
@@ -62,6 +70,14 @@
         {{ request.fulfilled|date() }}
         {% else %}
         -
+        {% endif %}
+      </td>
+      <td>
+        {% if acceptForm %}
+        {{ form(acceptForm) }}
+        {% endif %}
+        {% if denyForm %}
+        {{ form(denyForm) }}
         {% endif %}
       </td>
     </tr>
