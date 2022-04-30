@@ -1,6 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% set icons = ['client', 'delete', 'edit', 'key', 'request', 'secret', 'user'] %}
+{% set icons = [
+    'accept',
+    'client',
+    'delete',
+    'deny',
+    'detail',
+    'edit',
+    'key',
+    'request',
+    'secret',
+    'user',
+] %}
 
 {% block page %}
   <h1>Heading 1</h1>
@@ -41,7 +52,7 @@ test:
   </pre>
 
   <h2>Icons</h2>
-  <div style="display: flex;">
+  <div style="display: flex; flex-wrap: wrap;">
     {% for icon_name in icons %}
     <div style="margin: 1em;">
       <p>{{ icon_name|title }}</p>

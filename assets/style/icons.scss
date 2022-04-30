@@ -1,4 +1,15 @@
-$icon-names: (client, delete, edit, key, request, secret, user);
+$icon-names: (
+    accept,
+    client,
+    delete,
+    deny,
+    detail,
+    edit,
+    key,
+    request,
+    secret,
+    user,
+);
 $icon-sizes: (20, 32, 64, 128);
 
 @each $name in $icon-names {
