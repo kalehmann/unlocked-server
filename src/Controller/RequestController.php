@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Controller;
 
+use KaLehmann\UnlockedServer\Form\Type\AcceptRequestType;
+use KaLehmann\UnlockedServer\Form\Type\DenyRequestType;
 use KaLehmann\UnlockedServer\Model\Request as RequestModel;
 use KaLehmann\UnlockedServer\Repository\RequestRepository;
 use KaLehmann\UnlockedServer\Service\RequestService;
@@ -46,7 +48,7 @@ class RequestController extends AbstractController
         RequestService $requestService,
     ): Response {
         $user = $this->getUser();
-        $form = $this->buildAcceptRequestForm();
+        $form = $this->createForm(AcceptRequestType::class);
         $form->handleRequest($request);
         $isSubmitted = $form->isSubmitted();
         if (false === $isSubmitted || false === $form->isValid()) {
@@ -74,7 +76,7 @@ class RequestController extends AbstractController
                 'Expected form data to be an array, got ' . gettype($formData),
             );
         }
-        ['request_id' => $id] = $formData;
+        ['id' => $id] = $formData;
         $request = $requestRepository->find($id);
         if (null === $request) {
             throw new NotFoundHttpException();
@@ -95,7 +97,7 @@ class RequestController extends AbstractController
         RequestService $requestService,
     ): Response {
         $user = $this->getUser();
-        $form = $this->buildAcceptRequestForm();
+        $form = $this->createForm(DenyRequestType::class);
         $form->handleRequest($request);
         $isSubmitted = $form->isSubmitted();
         if (false === $isSubmitted || false === $form->isValid()) {
@@ -123,7 +125,7 @@ class RequestController extends AbstractController
                 'Expected form data to be an array, got ' . gettype($formData),
             );
         }
-        ['request_id' => $id] = $formData;
+        ['id' => $id] = $formData;
         $request = $requestRepository->find($id);
         if (null === $request) {
             throw new NotFoundHttpException();
@@ -155,10 +157,12 @@ class RequestController extends AbstractController
                     'request' => $request,
                 ];
                 if (RequestModel::STATE_PENDING === $request->getState()) {
-                    $data['acceptForm'] = $this->buildAcceptRequestForm(
+                    $data['acceptForm'] = $this->createForm(
+                        AcceptRequestType::class,
                         $request,
                     )->createView();
-                    $data['denyForm'] = $this->buildDenyRequestForm(
+                    $data['denyForm'] = $this->createForm(
+                        DenyRequestType::class,
                         $request,
                     )->createView();
                 }
@@ -173,53 +177,5 @@ class RequestController extends AbstractController
                 'requests' => $requests,
             ],
         );
-    }
-
-    private function buildAcceptRequestForm(
-        ?RequestModel $request = null,
-    ): FormInterface {
-        return $this->createFormBuilder()
-                    ->add(
-                        'save',
-                        SubmitType::class,
-                        [
-                            'label' => 'request.accept',
-                        ],
-                    )
-                    ->add(
-                        'request_id',
-                        HiddenType::class,
-                        [
-                            'data' => $request?->getId(),
-                        ],
-                    )
-                    ->setAction(
-                        $this->generateUrl('requests_accept'),
-                    )
-                    ->getForm();
-    }
-
-    private function buildDenyRequestForm(
-        ?RequestModel $request = null,
-    ): FormInterface {
-        return $this->createFormBuilder()
-                    ->add(
-                        'save',
-                        SubmitType::class,
-                        [
-                            'label' => 'request.deny',
-                        ],
-                    )
-                    ->add(
-                        'request_id',
-                        HiddenType::class,
-                        [
-                            'data' => $request?->getId(),
-                        ],
-                    )
-                    ->setAction(
-                        $this->generateUrl('requests_deny'),
-                    )
-                    ->getForm();
     }
 }
