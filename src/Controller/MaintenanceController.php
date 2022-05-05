@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Controller;
 
+use KaLehmann\UnlockedServer\Form\Type\BuildDatabaseType;
+use KaLehmann\UnlockedServer\Form\Type\RunMigrationsType;
 use KaLehmann\UnlockedServer\Service\ListDatabasesService;
 use KaLehmann\UnlockedServer\Service\MigrationStatusService;
 use Psr\Log\LoggerInterface;
@@ -49,7 +51,7 @@ class MaintenanceController
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
     ): Response {
-        $form = $this->buildCreateDatabaseForm($formFactory, $urlGenerator);
+        $form = $formFactory->create(BuildDatabaseType::class);
         $form->handleRequest($request);
 
         $isSubmitted = $form->isSubmitted();
@@ -92,7 +94,7 @@ class MaintenanceController
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
     ): Response {
-        $form = $this->buildRunMigrationsForm($formFactory, $urlGenerator);
+        $form = $formFactory->create(RunMigrationsType::class);
         $form->handleRequest($request);
 
         $isSubmitted = $form->isSubmitted();
@@ -133,7 +135,6 @@ class MaintenanceController
         ListDatabasesService $listDatabasesService,
         MigrationStatusService $migrationStatusService,
         Environment $twig,
-        UrlGeneratorInterface $urlGenerator,
     ): Response {
         $databaseExists = in_array(
             $listDatabasesService->getDefaultDatabaseName(),
@@ -148,11 +149,11 @@ class MaintenanceController
                 ->schemaUpToDate();
         }
 
-        $createDbForm = $this
-              ->buildCreateDatabaseForm($formFactory, $urlGenerator)
+        $createDbForm = $formFactory
+              ->create(BuildDatabaseType::class)
               ->createView();
-        $migrationsForm = $this
-              ->buildRunMigrationsForm($formFactory, $urlGenerator)
+        $migrationsForm = $formFactory
+              ->create(RunMigrationsType::class)
               ->createView();
 
         $extensions = [];
@@ -196,42 +197,6 @@ class MaintenanceController
             ),
             Response::HTTP_OK
         );
-    }
-
-    private function buildCreateDatabaseForm(
-        FormFactoryInterface $formFactory,
-        UrlGeneratorInterface $urlGenerator,
-    ): FormInterface {
-        return $formFactory->createBuilder()
-                            ->add(
-                                'save',
-                                SubmitType::class,
-                                [
-                                    'label' => 'maintenance.database.create',
-                                ],
-                            )
-                            ->setAction(
-                                $urlGenerator->generate('maintenance_init_db'),
-                            )
-                           ->getForm();
-    }
-
-    private function buildRunMigrationsForm(
-        FormFactoryInterface $formFactory,
-        UrlGeneratorInterface $urlGenerator,
-    ): FormInterface {
-        return $formFactory->createBuilder()
-                            ->add(
-                                'save',
-                                SubmitType::class,
-                                [
-                                    'label' => 'maintenance.database.run_migrations',
-                                ],
-                            )
-                            ->setAction(
-                                $urlGenerator->generate('maintenance_migrate'),
-                            )
-                           ->getForm();
     }
 
     /**
