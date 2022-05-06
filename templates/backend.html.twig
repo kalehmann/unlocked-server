@@ -3,22 +3,22 @@
 {%
 set menu = [
   {
-    'class': 'icon-64 icon-client',
+    'class': 'icon-client',
     'title': 'unlocked.client',
     'url': path('clients_list'),
   },
   {
-    'class': 'icon-64 icon-key',
+    'class': 'icon-key',
     'title': 'unlocked.key',
     'url': path('keys_list'),
   },
   {
-    'class': 'icon-64 icon-request',
+    'class': 'icon-request',
     'title': 'unlocked.request',
     'url': path('requests_list'),
   },
   {
-    'class': 'icon-64 icon-user',
+    'class': 'icon-user',
     'title': 'unlocked.user',
     'url': '#',
   },
@@ -33,7 +33,9 @@ set menu = [
 <nav>
   <ul>
     {% for entry in menu %}
-    <li><a class="menu-item" href="{{ entry.url }}"><span class="{{ entry.class }}"></span>{{ entry.title|trans() }}</a></li>
+    <li><a class="menu-item" href="{{ entry.url }}">
+        <span class="menu-icon {{ entry.class }}"></span>
+        <span class="menu-text">{{ entry.title|trans() }}</span></a></li>
     {% endfor %}
   </ul>
 </nav>

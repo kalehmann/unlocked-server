@@ -24,8 +24,11 @@ nav > ul {
     color: $foreground-color;
     display: flex;
     height: 100%;
-    padding: 1em;
     width: 100%;
+
+    & > .menu-icon {
+	@extend .icon-32;
+    }
 }
 
 @include for-desktop-up {
@@ -34,9 +37,28 @@ nav > ul {
 
 	& > li {
 	    flex-grow: 1;
-	    font-size: 2em;
 	    margin: 0;
 	    padding: 0;
+	}
+    }
+
+    .menu-item {
+	padding: 1em;
+
+	& > .menu-icon {
+	    height: 64px;
+	    width: 64px;
+	}
+
+	& > .menu-text {
+	    font-size: 0;
+	    transition: font-size 0.2s;
+	}
+    }
+
+    .menu-item:hover {
+	& > .menu-text {
+	    font-size: 2em;
 	}
     }
 }
