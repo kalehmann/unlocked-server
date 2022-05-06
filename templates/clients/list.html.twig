@@ -15,6 +15,11 @@
           {% trans %}client.description{% endtrans %}
         </div>
       </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}client.actions{% endtrans %}
+        </div>
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +27,12 @@
     <tr>
       <td>{{ client.handle }}</td>
       <td>{{ client.description }}</td>
+      <td>
+        <a
+          class="button"
+          href="{{ path('clients_edit', {"handle": client.handle}) }}"
+        >{% trans %}client.edit{% endtrans %}</a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>

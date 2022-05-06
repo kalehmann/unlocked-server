@@ -116,6 +116,11 @@ class Client implements UserInterface
         return $this->secret;
     }
 
+    public function setSecret(string $secret): void
+    {
+        $this->secret = $secret;
+    }
+
     public function getUser(): User
     {
         return $this->user;

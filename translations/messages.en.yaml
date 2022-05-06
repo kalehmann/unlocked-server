@@ -1,7 +1,11 @@
 ---
 client:
+        actions: 'Actions'
         description: 'Description'
+        edit: 'Edit'
         handle: 'Handle'
+        save: 'Save'
+        secret: 'Secret'
 key:
         description: 'Description'
         handle: 'Handle'
