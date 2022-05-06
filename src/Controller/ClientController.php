@@ -32,7 +32,6 @@ use KaLehmann\UnlockedServer\Repository\ClientRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -62,6 +61,20 @@ class ClientController extends AbstractController
             'clients/edit.html.twig',
             [
                 'editForm' => $form,
+            ],
+        );
+    }
+
+    public function list(
+        ClientRepository $clientRepository,
+    ): Response {
+        $user = $this->getUser();
+        $clients = $clientRepository->findBy(['user' => $user]);
+
+        return $this->render(
+            'clients/list.html.twig',
+            [
+                'clients' => $clients,
             ],
         );
     }
@@ -103,12 +116,14 @@ class ClientController extends AbstractController
         $editClientDto = $form->getData();
         if (false === is_object($editClientDto)) {
             throw new \RuntimeException(
-                'Expected form data to be a client, got ' . gettype($editClientDto),
+                'Expected form data to be an EditClientDto, got ' .
+                gettype($editClientDto),
             );
         }
         if (false === $editClientDto instanceof EditClientDto) {
             throw new \RuntimeException(
-                'Expected form data to be a client, got ' . get_class($editClientDto),
+                'Expected form data to be an EditClientDto, got ' .
+                get_class($editClientDto),
             );
         }
         if ($handle !== $editClientDto->handle) {
@@ -126,19 +141,5 @@ class ClientController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('clients_list');
-    }
-
-    public function list(
-        ClientRepository $clientRepository,
-    ): Response {
-        $user = $this->getUser();
-        $clients = $clientRepository->findBy(['user' => $user]);
-
-        return $this->render(
-            'clients/list.html.twig',
-            [
-                'clients' => $clients,
-            ],
-        );
     }
 }

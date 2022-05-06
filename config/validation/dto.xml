@@ -20,4 +20,14 @@
       </constraint>
     </property>
   </class>
+    <class name="KaLehmann\UnlockedServer\DTO\EditKeyDto">
+    <property name="description">
+      <constraint name="NotBlank"/>
+    </property>
+    <property name="handle">
+      <constraint name="Regex">
+        <option name="pattern">/^[a-zA-Z0-9\-_]{8,64}$/</option>
+      </constraint>
+    </property>
+  </class>
 </constraint-mapping>

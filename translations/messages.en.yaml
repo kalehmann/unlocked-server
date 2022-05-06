@@ -7,8 +7,12 @@ client:
         save: 'Save'
         secret: 'Secret'
 key:
+        actions: 'Actions'
         description: 'Description'
+        edit: 'Edit'
         handle: 'Handle'
+        key: 'Key'
+        save: 'Save'
 maintenance:
         command:
                 back: 'Go back'

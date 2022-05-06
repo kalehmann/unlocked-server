@@ -33,9 +33,18 @@ login:
 logout:
         path: '/logout'
         methods: 'GET'
+keys_edit:
+        path: '/keys/edit/{handle}'
+        controller: 'KaLehmann\UnlockedServer\Controller\KeyController::edit'
+        methods: 'GET'
 keys_list:
         path: '/keys'
         controller: 'KaLehmann\UnlockedServer\Controller\KeyController::list'
+        methods: 'GET'
+keys_save:
+        path: '/keys/edit/{handle}'
+        controller: 'KaLehmann\UnlockedServer\Controller\KeyController::save'
+        methods: 'POST'
 maintenance_init_db:
         path: '/maintenance/init_db'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::initDb'

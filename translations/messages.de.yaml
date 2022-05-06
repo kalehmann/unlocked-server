@@ -7,8 +7,12 @@ client:
         save: 'Speichern'
         secret: 'Geheimnis'
 key:
+        actions: 'Aktionen'
         description: 'Beschreibung'
+        edit: 'Bearbeiten'
         handle: 'Handle'
+        key: 'Schlüssel'
+        save: 'Speichern'
 maintenance:
         command:
                 back: 'Zurück'

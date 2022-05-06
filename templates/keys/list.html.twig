@@ -15,6 +15,11 @@
           {% trans %}key.description{% endtrans %}
         </div>
       </th>
+      <th>
+        <div class="icon-cell">
+          {% trans %}key.actions{% endtrans %}
+        </div>
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +27,12 @@
     <tr>
       <td>{{ key.handle }}</td>
       <td>{{ key.description }}</td>
+      <td>
+        <a
+          class="button"
+          href="{{ path('keys_edit', {"handle": key.handle}) }}"
+        >{% trans %}key.edit{% endtrans %}</a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
