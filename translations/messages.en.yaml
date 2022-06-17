@@ -52,6 +52,6 @@ unlocked:
         client: 'Clients'
         key: 'Keys'
         request: 'Requests'
-        user: 'Users'
+        user: 'User'
         title: 'UИLOCKED'
 ...
