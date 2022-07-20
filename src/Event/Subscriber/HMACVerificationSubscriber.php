@@ -28,6 +28,7 @@ use KaLehmann\UnlockedServer\Model\Token;
 use KaLehmann\UnlockedServer\Model\User;
 use KaLehmann\UnlockedServer\Security\Passport\Badge\HMACBadge;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
@@ -82,7 +83,7 @@ class HMACVerificationSubscriber implements EventSubscriberInterface
         );
 
         if ($expectedSignature !== strtolower($hmacBadge->getSignature())) {
-            throw new \RuntimeException(
+            throw new AuthenticationException(
                 'The provided HMAC signature for the request could not be ' .
                 'reproduced',
             );
