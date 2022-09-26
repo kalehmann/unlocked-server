@@ -31,13 +31,6 @@
     text-align: center;
     text-decoration: none;
     width: 100%;
-
-    &:focus ~ :not(input),
-    &:not(:placeholder-shown) ~ :not(input) {
-	bottom: 2rem;
-	color: $foreground-color;
-	font-size: 1.2em;
-    }
 }
 
 label {
@@ -53,6 +46,15 @@ label {
 	position: absolute;
 	transition: bottom 0.2s;
     }
+
+    /* Make every non-input child a floating description for the input. */
+    & > input:focus ~ :not(input),
+    & > input:not(:placeholder-shown) ~ :not(input) {
+	bottom: 2.5rem;
+	color: $foreground-color;
+	font-size: 1.2em;
+    }
+
 }
 
 
