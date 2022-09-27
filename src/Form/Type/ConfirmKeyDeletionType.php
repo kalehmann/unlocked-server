@@ -27,15 +27,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ConfirmKeyDeletionType extends AbstractType
 {
-    public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
-    ) {
-    }
-
     /**
      * @param array<mixed> $options
      */

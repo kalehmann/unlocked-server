@@ -64,7 +64,6 @@ class ListDatabasesService
     public function getDatabases(): array
     {
         $connection = $this->getDefaultConnection();
-        /** @var array<string, string> $params */
         $params = $connection->getParams();
         $driver = $params['driver'] ?? null;
         if ($driver === 'pdo_sqlite') {
@@ -81,7 +80,7 @@ class ListDatabasesService
             return [];
         }
 
-        unset($params['dbname'], $params['path'], $params['url']);
+        unset($params['dbname'], $params['path']);
         $tmpConnection = DriverManager::getConnection($params);
         $tmpConnection->connect();
 

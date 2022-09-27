@@ -37,6 +37,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Form\ClickableInterface;
+use \RuntimeException;
 
 class KeyController extends AbstractController
 {
@@ -125,7 +127,16 @@ class KeyController extends AbstractController
         if ($key->getUser() !== $user) {
             throw new BadRequestHttpException();
         }
-        if ($form->get('confirm')->isClicked()) {
+
+        $confirmButton = $form->get('confirm');
+        if (false === $confirmButton instanceof ClickableInterface) {
+            throw new RuntimeException(
+                'Expected Button in the ConfirmKeyDeletion form to implement ' .
+                'the ClickableInterface, got class "' .
+                get_class($confirmButton) . '" instead.',
+            );
+        }
+        if ($confirmButton->isClicked()) {
             $key->delete();
             $entityManager->persist($key);
             $entityManager->flush();
