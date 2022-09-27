@@ -8,6 +8,11 @@ client:
         secret: 'Geheimnis'
 key:
         actions: 'Aktionen'
+        deletion:
+                accept: 'Bestätigen'
+                confirm: 'Wollen Sie den Schlüssel %handle% wirklich löschen?'
+                deny: 'Ablehnen'
+        delete: 'Löschen'
         description: 'Beschreibung'
         edit: 'Bearbeiten'
         handle: 'Handle'

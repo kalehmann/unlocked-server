@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use KaLehmann\UnlockedServer\DTO\DeleteKeyDto;
 use KaLehmann\UnlockedServer\DTO\EditKeyDto;
+use KaLehmann\UnlockedServer\Form\Type\ConfirmKeyDeletionType;
 use KaLehmann\UnlockedServer\Form\Type\EditKeyType;
 use KaLehmann\UnlockedServer\Mapping\KeyMapper;
 use KaLehmann\UnlockedServer\Model\Key;
@@ -38,6 +40,100 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class KeyController extends AbstractController
 {
+    public function confirmDeletion(
+        KeyMapper $keyMapper,
+        KeyRepository $keyRepository,
+        string $handle,
+    ): Response {
+        $key = $keyRepository->find($handle);
+        if (null === $key) {
+            throw new NotFoundHttpException();
+        }
+        $user = $this->getUser();
+        if ($user !== $key->getUser()) {
+            throw new BadRequestHttpException();
+        }
+        $deleteKeyDto = new DeleteKeyDto();
+        $keyMapper->mapModelToDeleteDto($key, $deleteKeyDto);
+        $form = $this
+            ->createForm(ConfirmKeyDeletionType::class, $deleteKeyDto)
+            ->createView();
+
+        return $this->render(
+            'keys/delete.html.twig',
+            [
+                'confirmForm' => $form,
+                'handle' => $handle,
+            ],
+        );
+    }
+
+    public function delete(
+        KeyRepository $keyRepository,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        Request $request,
+        string $handle,
+    ): Response {
+        $user = $this->getUser();
+        $form = $this->createForm(ConfirmKeyDeletionType::class, new DeleteKeyDto());
+        $form->handleRequest($request);
+        $isSubmitted = $form->isSubmitted();
+        if (false === $isSubmitted || false === $form->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('keys_delete', ['handle' => $handle]) .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('keys_delete', ['handle' => $handle]) .
+                    '" but form was not submitted',
+                );
+            }
+
+            return $this->render(
+                'keys/delete.html.twig',
+                [
+                    'confirmForm' => $form->createView(),
+                    'handle' => $handle,
+                ],
+            );
+        }
+        $deleteKeyDto = $form->getData();
+        if (false === is_object($deleteKeyDto)) {
+            throw new \RuntimeException(
+                'Expected form data to be an DeleteKeyDto, got ' .
+                gettype($deleteKeyDto),
+            );
+        }
+        if (false === $deleteKeyDto instanceof DeleteKeyDto) {
+            throw new \RuntimeException(
+                'Expected form data to be a EditKeyDto, got ' .
+                get_class($deleteKeyDto),
+            );
+        }
+        if ($handle !== $deleteKeyDto->handle) {
+            throw new BadRequestHttpException();
+        }
+        $key = $keyRepository->find($deleteKeyDto->handle);
+        if (null === $key) {
+            throw new NotFoundHttpException();
+        }
+        if ($key->getUser() !== $user) {
+            throw new BadRequestHttpException();
+        }
+        if ($form->get('confirm')->isClicked()) {
+            $key->delete();
+            $entityManager->persist($key);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('keys_list');
+    }
+
     public function edit(
         KeyMapper $keyMapper,
         KeyRepository $keyRepository,
@@ -71,6 +167,7 @@ class KeyController extends AbstractController
         $user = $this->getUser();
         $keys = $keyRepository->findBy(
             [
+                'deleted' => false,
                 'user' => $user,
             ],
         );

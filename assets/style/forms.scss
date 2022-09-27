@@ -18,7 +18,7 @@
     @extend .clickable;
     border: 1px solid black;
     border-radius: 5px;
-    margin-top: 1.5em;
+    margin-top: 1.5rem;
 }
 
 .button, button, input {
@@ -27,10 +27,17 @@
     border-right: none;
     color: $foreground-color;
     display: block;
-    padding: 0.4em 0.2em;
+    padding: 0.6rem 0.8rem;
     text-align: center;
     text-decoration: none;
     width: 100%;
+
+    &.inline {
+	display: inline-flex;
+	justify-content: center;
+	margin: .5rem;
+	width: auto;
+    }
 }
 
 label {

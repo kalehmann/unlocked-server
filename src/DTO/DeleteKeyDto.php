@@ -21,33 +21,9 @@
 
 declare(strict_types=1);
 
-namespace KaLehmann\UnlockedServer\Mapping;
+namespace KaLehmann\UnlockedServer\DTO;
 
-use KaLehmann\UnlockedServer\DTO\DeleteKeyDto;
-use KaLehmann\UnlockedServer\DTO\EditKeyDto;
-use KaLehmann\UnlockedServer\Model\Key;
-
-class KeyMapper
+class DeleteKeyDto
 {
-    public function mapEditDtoToModel(
-        EditKeyDto $dto,
-        Key $key,
-    ): void {
-        $key->setDescription($dto->description);
-    }
-
-    public function mapModelToDeleteDto(
-        Key $key,
-        DeleteKeyDto $dto,
-    ): void {
-        $dto->handle = $key->getHandle();
-    }
-
-    public function mapModelToEditDto(
-        Key $key,
-        EditKeyDto $dto,
-    ): void {
-        $dto->handle = $key->getHandle();
-        $dto->description = $key->getDescription();
-    }
+    public string $handle;
 }
