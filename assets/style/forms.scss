@@ -40,6 +40,20 @@
     }
 }
 
+label.button {
+    text-align: left;
+}
+
+label > input[type="checkbox"] {
+    display: inline-block;
+    width: auto;
+
+    & ~ :not(input) {
+	bottom: auto;
+	position: static;
+    }
+}
+
 label {
     display: block;
     margin-bottom: .5em;
@@ -48,15 +62,14 @@ label {
 
     & > :not(input) {
 	bottom: 1px;
-	color: $foreground-color;
 	padding-left: 0.2em;
 	position: absolute;
 	transition: bottom 0.2s;
     }
 
     /* Make every non-input child a floating description for the input. */
-    & > input:focus ~ :not(input),
-    & > input:not(:placeholder-shown) ~ :not(input) {
+    & > input:focus:not([type="checkbox"]) ~ :not(input),
+    & > input:not(:placeholder-shown):not([type="checkbox"]) ~ :not(input) {
 	bottom: 2.5rem;
 	color: $foreground-color;
 	font-size: 1.2em;
