@@ -32,13 +32,13 @@ use KaLehmann\UnlockedServer\Mapping\KeyMapper;
 use KaLehmann\UnlockedServer\Model\Key;
 use KaLehmann\UnlockedServer\Repository\KeyRepository;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Form\ClickableInterface;
-use \RuntimeException;
 
 class KeyController extends AbstractController
 {
