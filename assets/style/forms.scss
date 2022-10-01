@@ -1,3 +1,4 @@
+@import './breakpoints';
 @import './colors';
 
 .clickable {
@@ -19,6 +20,7 @@
     border: 1px solid black;
     border-radius: 5px;
     margin-top: 1.5rem;
+    text-align: center;
 }
 
 .button, button, input {
@@ -28,16 +30,8 @@
     color: $foreground-color;
     display: block;
     padding: 0.6rem 0.8rem;
-    text-align: center;
     text-decoration: none;
     width: 100%;
-
-    &.inline {
-	display: inline-flex;
-	justify-content: center;
-	margin: .5rem;
-	width: auto;
-    }
 }
 
 label.button {
@@ -61,7 +55,9 @@ label {
     position: relative;
 
     & > :not(input) {
-	bottom: 1px;
+	bottom: 0.4rem;
+	color: $foreground-color-shaded;
+	left: 0.6rem;
 	padding-left: 0.2em;
 	position: absolute;
 	transition: bottom 0.2s;
@@ -70,11 +66,11 @@ label {
     /* Make every non-input child a floating description for the input. */
     & > input:focus:not([type="checkbox"]) ~ :not(input),
     & > input:not(:placeholder-shown):not([type="checkbox"]) ~ :not(input) {
-	bottom: 2.5rem;
+	bottom: 2.6rem;
 	color: $foreground-color;
 	font-size: 1.2em;
+	left: 0;
     }
-
 }
 
 
@@ -107,5 +103,31 @@ label {
 	background-color: #b6b6b6;
 	-webkit-mask-image: url("../icon/user.svg");
 	mask-image: url("../icon/user.svg");
+    }
+}
+
+@include for-desktop-up {
+    .button, button, input {
+	&.inline {
+	    align-items: center;
+	    display: inline-flex;
+	    justify-content: center;
+	    margin: .5rem;
+	    width: auto;
+	}
+    }
+
+
+    form.inline {
+        display: inline-flex;
+        padding-top: 1rem;
+    }
+
+    label.inline {
+	display: inline-flex;
+	justify-content: left;
+	margin: .5rem;
+	padding-top: 0;
+	width: auto;
     }
 }
