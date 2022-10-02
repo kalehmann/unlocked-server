@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use KaLehmann\UnlockedServer\DTO\CreateKeyDto;
 use KaLehmann\UnlockedServer\DTO\DeleteKeyDto;
 use KaLehmann\UnlockedServer\DTO\EditKeyDto;
 use KaLehmann\UnlockedServer\DTO\SearchKeyDto;
 use KaLehmann\UnlockedServer\Form\Type\ConfirmKeyDeletionType;
+use KaLehmann\UnlockedServer\Form\Type\CreateKeyType;
 use KaLehmann\UnlockedServer\Form\Type\EditKeyType;
 use KaLehmann\UnlockedServer\Form\Type\SearchKeyType;
 use KaLehmann\UnlockedServer\Mapping\KeyMapper;
@@ -45,6 +47,19 @@ use Symfony\Component\Form\ClickableInterface;
 
 class KeyController extends AbstractController
 {
+    public function add(): Response
+    {
+        $createKeyDto = new CreateKeyDto();
+        $createForm = $this->createForm(CreateKeyType::class, $createKeyDto);
+
+        return $this->render(
+            'keys/create.html.twig',
+            [
+                'createForm' => $createForm->createView(),
+            ],
+        );
+    }
+
     public function confirmDeletion(
         KeyMapper $keyMapper,
         KeyRepository $keyRepository,
@@ -68,6 +83,52 @@ class KeyController extends AbstractController
                 'handle' => $handle,
             ],
         );
+    }
+
+    public function create(
+        EntityManagerInterface $entityManager,
+        KeyMapper $keyMapper,
+        LoggerInterface $logger,
+        Request $request,
+    ): Response {
+        $createKeyDto = new CreateKeyDto();
+        $createForm = $this->createForm(CreateKeyType::class, $createKeyDto);
+        $createForm->handleRequest($request);
+        $isSubmitted = $createForm->isSubmitted();
+        if (false === $isSubmitted || false === $createForm->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('keys_create') .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('keys_create') .
+                    '" but form was not submitted',
+                );
+            }
+
+            return $this->render(
+                'keys/create.html.twig',
+                [
+                    'createForm' => $createForm->createView(),
+                ],
+            );
+        }
+        $user = $this->getUser();
+        if (false === $user instanceof User) {
+            throw new \RuntimeException(
+                'Expected Controller::getUser() to return a User model, got ' .
+                (is_object($user) ? get_class($user) : gettype($user)),
+            );
+        }
+        $key = $keyMapper->createModelFromCreateDto($createKeyDto, $user);
+        $entityManager->persist($key);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('keys_list');
     }
 
     public function delete(

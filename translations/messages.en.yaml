@@ -8,6 +8,8 @@ client:
         secret: 'Secret'
 key:
         actions: 'Actions'
+        add: 'Add key'
+        create: 'Create'
         deletion:
                 accept: 'Confirm'
                 confirm: 'Do you really want to delete the key %handle%?'

@@ -20,7 +20,7 @@
       </constraint>
     </property>
   </class>
-    <class name="KaLehmann\UnlockedServer\DTO\EditKeyDto">
+  <class name="KaLehmann\UnlockedServer\DTO\AddKeyDto">
     <property name="description">
       <constraint name="NotBlank"/>
     </property>
@@ -28,6 +28,14 @@
       <constraint name="Regex">
         <option name="pattern">/^[a-zA-Z0-9\-_]{8,64}$/</option>
       </constraint>
+    </property>
+    <property name="key">
+      <constraint name="NotBlank"/>
+    </property>
+  </class>
+  <class name="KaLehmann\UnlockedServer\DTO\EditKeyDto">
+    <property name="description">
+      <constraint name="NotBlank"/>
     </property>
   </class>
 </constraint-mapping>

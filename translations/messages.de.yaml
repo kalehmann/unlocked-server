@@ -8,6 +8,8 @@ client:
         secret: 'Geheimnis'
 key:
         actions: 'Aktionen'
+        add: 'Schlüssel hinzufügen'
+        create: 'Erstellen'
         deletion:
                 accept: 'Bestätigen'
                 confirm: 'Wollen Sie den Schlüssel %handle% wirklich löschen?'

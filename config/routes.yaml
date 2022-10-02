@@ -33,10 +33,18 @@ login:
 logout:
         path: '/logout'
         methods: 'GET'
+keys_add:
+        path: '/keys/add'
+        controller: 'KaLehmann\UnlockedServer\Controller\KeyController::add'
+        methods: 'GET'
 keys_confirm_deletion:
         path: '/keys/delete/{handle}'
         controller: 'KaLehmann\UnlockedServer\Controller\KeyController::confirmDeletion'
         methods: 'GET'
+keys_create:
+        path: '/keys/add'
+        controller: 'KaLehmann\UnlockedServer\Controller\KeyController::create'
+        methods: 'POST'
 keys_delete:
         path: '/keys/delete/{handle}'
         controller: 'KaLehmann\UnlockedServer\Controller\KeyController::delete'

@@ -23,12 +23,24 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Mapping;
 
+use KaLehmann\UnlockedServer\DTO\CreateKeyDto;
 use KaLehmann\UnlockedServer\DTO\DeleteKeyDto;
 use KaLehmann\UnlockedServer\DTO\EditKeyDto;
 use KaLehmann\UnlockedServer\Model\Key;
+use KaLehmann\UnlockedServer\Model\User;
 
 class KeyMapper
 {
+    public function createModelFromCreateDto(
+        CreateKeyDto $dto,
+        User $user,
+    ): Key {
+        $key = new Key($dto->handle, $dto->key, $user);
+        $key->setDescription($dto->description);
+
+        return $key;
+    }
+
     public function mapEditDtoToModel(
         EditKeyDto $dto,
         Key $key,
