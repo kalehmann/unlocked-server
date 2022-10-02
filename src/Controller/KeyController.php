@@ -54,20 +54,17 @@ class KeyController extends AbstractController
         if (null === $key) {
             throw new NotFoundHttpException();
         }
-        $user = $this->getUser();
-        if ($user !== $key->getUser()) {
+        if ($key->getUser() !== $this->getUser()) {
             throw new BadRequestHttpException();
         }
         $deleteKeyDto = new DeleteKeyDto();
         $keyMapper->mapModelToDeleteDto($key, $deleteKeyDto);
-        $form = $this
-            ->createForm(ConfirmKeyDeletionType::class, $deleteKeyDto)
-            ->createView();
+        $form = $this->createForm(ConfirmKeyDeletionType::class, $deleteKeyDto);
 
         return $this->render(
             'keys/delete.html.twig',
             [
-                'confirmForm' => $form,
+                'confirmForm' => $form->createView(),
                 'handle' => $handle,
             ],
         );
@@ -80,8 +77,8 @@ class KeyController extends AbstractController
         Request $request,
         string $handle,
     ): Response {
-        $user = $this->getUser();
-        $form = $this->createForm(ConfirmKeyDeletionType::class, new DeleteKeyDto());
+        $deleteKeyDto = new DeleteKeyDto();
+        $form = $this->createForm(ConfirmKeyDeletionType::class, $deleteKeyDto);
         $form->handleRequest($request);
         $isSubmitted = $form->isSubmitted();
         if (false === $isSubmitted || false === $form->isValid()) {
@@ -107,19 +104,6 @@ class KeyController extends AbstractController
                 ],
             );
         }
-        $deleteKeyDto = $form->getData();
-        if (false === is_object($deleteKeyDto)) {
-            throw new \RuntimeException(
-                'Expected form data to be an DeleteKeyDto, got ' .
-                gettype($deleteKeyDto),
-            );
-        }
-        if (false === $deleteKeyDto instanceof DeleteKeyDto) {
-            throw new \RuntimeException(
-                'Expected form data to be a DeleteKeyDto, got ' .
-                get_class($deleteKeyDto),
-            );
-        }
         if ($handle !== $deleteKeyDto->handle) {
             throw new BadRequestHttpException();
         }
@@ -127,7 +111,7 @@ class KeyController extends AbstractController
         if (null === $key) {
             throw new NotFoundHttpException();
         }
-        if ($key->getUser() !== $user) {
+        if ($key->getUser() !== $this->getUser()) {
             throw new BadRequestHttpException();
         }
 
@@ -180,56 +164,25 @@ class KeyController extends AbstractController
         LoggerInterface $logger,
         Request $request,
     ): Response {
-        $showDeleted = false;
-        $searchQuery = null;
-
-        $searchForm = $this->createForm(SearchKeyType::class, new SearchKeyDto());
+        $searchKeyDto = new SearchKeyDto();
+        $searchForm = $this->createForm(SearchKeyType::class, $searchKeyDto);
         $searchForm->handleRequest($request);
-        if ($searchForm->isSubmitted()) {
-            if (false === $searchForm->isValid()) {
-                $logger->warning(
-                    'Request to "' .
-                    $this->generateUrl('keys_list') .
-                    '" with invalid search form',
-                );
-            } else {
-                $searchKeyDto = $searchForm->getData();
-                if (false === is_object($searchKeyDto)) {
-                    throw new \RuntimeException(
-                        'Expected form data to be an searchKeyDto, got ' .
-                        gettype($searchKeyDto),
-                    );
-                }
-                if (false === $searchKeyDto instanceof SearchKeyDto) {
-                    throw new \RuntimeException(
-                        'Expected form data to be a SearchKeyDto, got ' .
-                        get_class($searchKeyDto),
-                    );
-                }
-
-                $showDeleted = $searchKeyDto->showDeleted;
-                $searchQuery = $searchKeyDto->query;
-            }
-        }
         $user = $this->getUser();
-        if (false === is_object($user)) {
-            throw new \RuntimeException(
-                'Expected Controller::getUser() to return a User model, got ' .
-                gettype($user),
-            );
-        }
         if (false === $user instanceof User) {
             throw new \RuntimeException(
                 'Expected Controller::getUser() to return a User model, got ' .
-                get_class($user),
+                (is_object($user) ? get_class($user) : gettype($user)),
             );
         }
-        $keys = $keyRepository->search($user, $searchQuery, $showDeleted);
 
         return $this->render(
             'keys/list.html.twig',
             [
-                'keys' => $keys,
+                'keys' => $keyRepository->search(
+                    $user,
+                    $searchKeyDto->query,
+                    $searchKeyDto->showDeleted,
+                ),
                 'searchForm' => $searchForm->createView(),
             ],
         );
@@ -243,8 +196,8 @@ class KeyController extends AbstractController
         Request $request,
         string $handle,
     ): Response {
-        $user = $this->getUser();
-        $form = $this->createForm(EditKeyType::class, new EditKeyDto());
+        $editKeyDto = new EditKeyDto();
+        $form = $this->createForm(EditKeyType::class, $editKeyDto);
         $form->handleRequest($request);
         $isSubmitted = $form->isSubmitted();
         if (false === $isSubmitted || false === $form->isValid()) {
@@ -269,19 +222,6 @@ class KeyController extends AbstractController
                 ],
             );
         }
-        $editKeyDto = $form->getData();
-        if (false === is_object($editKeyDto)) {
-            throw new \RuntimeException(
-                'Expected form data to be an EditKeyDto, got ' .
-                gettype($editKeyDto),
-            );
-        }
-        if (false === $editKeyDto instanceof EditKeyDto) {
-            throw new \RuntimeException(
-                'Expected form data to be a EditKeyDto, got ' .
-                get_class($editKeyDto),
-            );
-        }
         if ($handle !== $editKeyDto->handle) {
             throw new BadRequestHttpException();
         }
@@ -289,7 +229,7 @@ class KeyController extends AbstractController
         if (null === $key) {
             throw new NotFoundHttpException();
         }
-        if ($key->getUser() !== $user) {
+        if ($key->getUser() !== $this->getUser()) {
             throw new BadRequestHttpException();
         }
         $keyMapper->mapEditDtoToModel($editKeyDto, $key);
