@@ -1,16 +1,23 @@
 {% use "form_div_layout.html.twig" %}
 
 {%- block form_row -%}
-<label {{- block('label_attributes') -}}>
-  {{ form_widget(form) }}
-  <span>{{ label|trans(label_translation_parameters, translation_domain) }}</span>
-</label>
+  <label {{- block('label_attributes') -}}>
+    {{ form_widget(form) }}
+    <span>{{ label|trans(label_translation_parameters, translation_domain) }}</span>
+  </label>
 {%- endblock form_row -%}
 
 {%- block form_widget_simple -%}
   {% set attr = attr|merge({'placeholder' : attr["placeholder"]|default(" ")}) %}
   {{ parent() }}
 {%- endblock form_widget_simple -%}
+
+{%- block form -%}
+  {{ form_start(form) }}
+    {{- form_errors(form) -}}
+    {{- form_rest(form) -}}
+  {{ form_end(form) }}
+{%- endblock form -%}
 
 {%- block button_row -%}
   {{- form_widget(form) -}}
