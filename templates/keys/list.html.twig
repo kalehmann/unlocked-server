@@ -31,20 +31,22 @@
       <td>{{ key.handle }}</td>
       <td>{{ key.description }}</td>
       <td>
-        <a
-          class="button inline"
-          href="{{ path('keys_edit', {"handle": key.handle}) }}"
-        >
-          <span class="icon-20 icon-edit"></span>
-          {% trans %}key.edit{% endtrans %}
-        </a>
-        <a
-          class="button inline"
-          href="{{ path('keys_confirm_deletion', {"handle": key.handle}) }}"
-        >
-          <span class="icon-20 icon-delete"></span>
-          {% trans %}key.delete{% endtrans %}
-        </a>
+        {% if key.deleted is same as(false) %}
+          <a
+            class="button inline"
+            href="{{ path('keys_edit', {"handle": key.handle}) }}"
+          >
+            <span class="icon-20 icon-edit"></span>
+            {% trans %}key.edit{% endtrans %}
+          </a>
+          <a
+            class="button inline"
+            href="{{ path('keys_confirm_deletion', {"handle": key.handle}) }}"
+          >
+            <span class="icon-20 icon-delete"></span>
+            {% trans %}key.delete{% endtrans %}
+          </a>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}

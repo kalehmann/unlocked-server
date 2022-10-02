@@ -114,6 +114,9 @@ class KeyController extends AbstractController
         if ($key->getUser() !== $this->getUser()) {
             throw new BadRequestHttpException();
         }
+        if ($key->isDeleted()) {
+            return $this->redirectToRoute('keys_list');
+        }
 
         $confirmButton = $form->get('confirm');
         if (false === $confirmButton instanceof ClickableInterface) {
@@ -140,6 +143,9 @@ class KeyController extends AbstractController
         $key = $keyRepository->find($handle);
         if (null === $key) {
             throw new NotFoundHttpException();
+        }
+        if ($key->isDeleted()) {
+            return $this->redirectToRoute('keys_list');
         }
         $user = $this->getUser();
         if ($user !== $key->getUser()) {
@@ -231,6 +237,9 @@ class KeyController extends AbstractController
         }
         if ($key->getUser() !== $this->getUser()) {
             throw new BadRequestHttpException();
+        }
+        if ($key->isDeleted()) {
+            return $this->redirectToRoute('keys_list');
         }
         $keyMapper->mapEditDtoToModel($editKeyDto, $key);
         $entityManager->persist($key);
