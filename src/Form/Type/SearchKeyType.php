@@ -50,7 +50,7 @@ class SearchKeyType extends AbstractType
                 ],
             )
             ->add(
-                'show_deleted',
+                'showDeleted',
                 CheckboxType::class,
                 [
                     'label' => 'key.search.show_deleted',
@@ -73,13 +73,13 @@ class SearchKeyType extends AbstractType
             ->setMethod('GET');
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('attr', ['class' => 'inline']);
         $resolver->setDefault('csrf_protection', false);
     }
 
-    public function getBlockPrefix(): ?string
+    public function getBlockPrefix(): string
     {
         return '';
     }

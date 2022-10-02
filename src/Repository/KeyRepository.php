@@ -39,6 +39,9 @@ class KeyRepository extends ServiceEntityRepository
         parent::__construct($registry, Key::class);
     }
 
+    /**
+     * @return array<Key>
+     */
     public function search(
         User $user,
         ?string $query = null,
@@ -62,6 +65,15 @@ class KeyRepository extends ServiceEntityRepository
                 ->setParameter('deleted', false);
         }
 
-        return $qb->getQuery()->execute();
+        $result = $qb->getQuery()->execute();
+
+        if (false === is_array($result)) {
+            throw new \RuntimeException(
+                'Expected an array from the query for keys, got ' .
+                gettype($result),
+            );
+        }
+
+        return $result;
     }
 }

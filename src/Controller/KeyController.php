@@ -26,11 +26,13 @@ namespace KaLehmann\UnlockedServer\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use KaLehmann\UnlockedServer\DTO\DeleteKeyDto;
 use KaLehmann\UnlockedServer\DTO\EditKeyDto;
+use KaLehmann\UnlockedServer\DTO\SearchKeyDto;
 use KaLehmann\UnlockedServer\Form\Type\ConfirmKeyDeletionType;
 use KaLehmann\UnlockedServer\Form\Type\EditKeyType;
 use KaLehmann\UnlockedServer\Form\Type\SearchKeyType;
 use KaLehmann\UnlockedServer\Mapping\KeyMapper;
 use KaLehmann\UnlockedServer\Model\Key;
+use KaLehmann\UnlockedServer\Model\User;
 use KaLehmann\UnlockedServer\Repository\KeyRepository;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -114,7 +116,7 @@ class KeyController extends AbstractController
         }
         if (false === $deleteKeyDto instanceof DeleteKeyDto) {
             throw new \RuntimeException(
-                'Expected form data to be a EditKeyDto, got ' .
+                'Expected form data to be a DeleteKeyDto, got ' .
                 get_class($deleteKeyDto),
             );
         }
@@ -175,12 +177,13 @@ class KeyController extends AbstractController
 
     public function list(
         KeyRepository $keyRepository,
+        LoggerInterface $logger,
         Request $request,
     ): Response {
         $showDeleted = false;
         $searchQuery = null;
 
-        $searchForm = $this->createForm(SearchKeyType::class);
+        $searchForm = $this->createForm(SearchKeyType::class, new SearchKeyDto());
         $searchForm->handleRequest($request);
         if ($searchForm->isSubmitted()) {
             if (false === $searchForm->isValid()) {
@@ -190,11 +193,37 @@ class KeyController extends AbstractController
                     '" with invalid search form',
                 );
             } else {
-                $showDeleted = $searchForm->get('show_deleted')->getData();
-                $searchQuery = $searchForm->get('query')->getData();
+                $searchKeyDto = $searchForm->getData();
+                if (false === is_object($searchKeyDto)) {
+                    throw new \RuntimeException(
+                        'Expected form data to be an searchKeyDto, got ' .
+                        gettype($searchKeyDto),
+                    );
+                }
+                if (false === $searchKeyDto instanceof SearchKeyDto) {
+                    throw new \RuntimeException(
+                        'Expected form data to be a SearchKeyDto, got ' .
+                        get_class($searchKeyDto),
+                    );
+                }
+
+                $showDeleted = $searchKeyDto->showDeleted;
+                $searchQuery = $searchKeyDto->query;
             }
         }
         $user = $this->getUser();
+        if (false === is_object($user)) {
+            throw new \RuntimeException(
+                'Expected Controller::getUser() to return a User model, got ' .
+                gettype($user),
+            );
+        }
+        if (false === $user instanceof User) {
+            throw new \RuntimeException(
+                'Expected Controller::getUser() to return a User model, got ' .
+                get_class($user),
+            );
+        }
         $keys = $keyRepository->search($user, $searchQuery, $showDeleted);
 
         return $this->render(
