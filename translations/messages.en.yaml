@@ -18,6 +18,10 @@ key:
         handle: 'Handle'
         key: 'Key'
         save: 'Save'
+        search:
+                query: 'Search term'
+                search: 'Search'
+                show_deleted: 'Show deleted keys'
 maintenance:
         command:
                 back: 'Go back'

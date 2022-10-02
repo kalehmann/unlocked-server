@@ -28,6 +28,7 @@ use KaLehmann\UnlockedServer\DTO\DeleteKeyDto;
 use KaLehmann\UnlockedServer\DTO\EditKeyDto;
 use KaLehmann\UnlockedServer\Form\Type\ConfirmKeyDeletionType;
 use KaLehmann\UnlockedServer\Form\Type\EditKeyType;
+use KaLehmann\UnlockedServer\Form\Type\SearchKeyType;
 use KaLehmann\UnlockedServer\Mapping\KeyMapper;
 use KaLehmann\UnlockedServer\Model\Key;
 use KaLehmann\UnlockedServer\Repository\KeyRepository;
@@ -174,19 +175,33 @@ class KeyController extends AbstractController
 
     public function list(
         KeyRepository $keyRepository,
+        Request $request,
     ): Response {
+        $showDeleted = false;
+        $searchQuery = null;
+
+        $searchForm = $this->createForm(SearchKeyType::class);
+        $searchForm->handleRequest($request);
+        if ($searchForm->isSubmitted()) {
+            if (false === $searchForm->isValid()) {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('keys_list') .
+                    '" with invalid search form',
+                );
+            } else {
+                $showDeleted = $searchForm->get('show_deleted')->getData();
+                $searchQuery = $searchForm->get('query')->getData();
+            }
+        }
         $user = $this->getUser();
-        $keys = $keyRepository->findBy(
-            [
-                'deleted' => false,
-                'user' => $user,
-            ],
-        );
+        $keys = $keyRepository->search($user, $searchQuery, $showDeleted);
 
         return $this->render(
             'keys/list.html.twig',
             [
                 'keys' => $keys,
+                'searchForm' => $searchForm->createView(),
             ],
         );
     }

@@ -1,0 +1,33 @@
+{% use "form_div_layout.html.twig" %}
+
+{%- block form_row -%}
+<label {{- block('label_attributes') -}}>
+  {{ form_widget(form) }}
+  <span>{{ label|trans(label_translation_parameters, translation_domain) }}</span>
+</label>
+{%- endblock form_row -%}
+
+{%- block form_widget_simple -%}
+  {% set attr = attr|merge({'placeholder' : attr["placeholder"]|default(" ")}) %}
+  {{ parent() }}
+{%- endblock form_widget_simple -%}
+
+{%- block button_row -%}
+  {{- form_widget(form) -}}
+{%- endblock button_row -%}
+
+{%- block button_attributes -%}
+    id="{{ id }}"{% if disabled %} disabled="disabled"{% endif -%}
+    {{ block('attributes') }}
+{%- endblock button_attributes -%}
+
+{%- block label_attributes -%}
+  {{- " " -}}
+  {%- for name, value in label_attr -%}
+    {%- if value is same as(true) -%}
+      {{- name }}="{{ name }}"
+    {%- elseif value is not same as(false) -%}
+      {{- name }}="{{ value }}"
+    {%- endif -%}
+  {%- endfor -%}
+{%- endblock label_attributes -%}

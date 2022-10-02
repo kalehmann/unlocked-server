@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 use KaLehmann\UnlockedServer\Model\Key;
+use KaLehmann\UnlockedServer\Model\User;
 
 /**
  * @extends ServiceEntityRepository<Key>
@@ -35,5 +37,31 @@ class KeyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Key::class);
+    }
+
+    public function search(
+        User $user,
+        ?string $query = null,
+        bool $showDeleted = false,
+    ): array {
+        $qb = $this->createQueryBuilder('k');
+        $qb
+            ->where($qb->expr()->eq('k.user', ':user'))
+            ->setParameter(':user', $user);
+        if ($query) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('k.description', ':query'),
+                    $qb->expr()->like('k.handle', ':query'),
+                )
+            )->setParameter('query', '%'.$query.'%');
+        }
+        if (false === $showDeleted) {
+            $qb
+                ->andWhere($qb->expr()->eq('k.deleted', ':deleted'))
+                ->setParameter('deleted', false);
+        }
+
+        return $qb->getQuery()->execute();
     }
 }

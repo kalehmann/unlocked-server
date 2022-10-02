@@ -18,6 +18,10 @@ key:
         handle: 'Handle'
         key: 'Schlüssel'
         save: 'Speichern'
+        search:
+                query: 'Suchbegriff'
+                search: 'Suchen'
+                show_deleted: 'Zeige gelöschte Schlüssel'
 maintenance:
         command:
                 back: 'Zurück'
