@@ -57,7 +57,7 @@ class KeyRepository extends ServiceEntityRepository
                     $qb->expr()->like('k.description', ':query'),
                     $qb->expr()->like('k.handle', ':query'),
                 )
-            )->setParameter('query', '%'.$query.'%');
+            )->setParameter('query', '%' . $query . '%');
         }
         if (false === $showDeleted) {
             $qb
