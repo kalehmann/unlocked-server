@@ -5,6 +5,7 @@
     {{ form_widget(form) }}
     <span>{{ label|trans(label_translation_parameters, translation_domain) }}</span>
   </label>
+  {{- form_errors(form) -}}
 {%- endblock form_row -%}
 
 {%- block form_widget_simple -%}
