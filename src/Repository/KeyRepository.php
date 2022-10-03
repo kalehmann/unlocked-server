@@ -25,6 +25,7 @@ namespace KaLehmann\UnlockedServer\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use KaLehmann\UnlockedServer\Model\Key;
 use KaLehmann\UnlockedServer\Model\User;
@@ -40,13 +41,16 @@ class KeyRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<Key>
+     * @return Paginator<Key>
      */
-    public function search(
+    public function searchPaginated(
         User $user,
+        int $page = 1,
+        int $perPage = 15,
         ?string $query = null,
         bool $showDeleted = false,
-    ): array {
+    ): Paginator {
+        $offset = $perPage * ($page - 1);
         $qb = $this->createQueryBuilder('k');
         $qb
             ->where($qb->expr()->eq('k.user', ':user'))
@@ -64,16 +68,11 @@ class KeyRepository extends ServiceEntityRepository
                 ->andWhere($qb->expr()->eq('k.deleted', ':deleted'))
                 ->setParameter('deleted', false);
         }
+        $qb
+            ->orderBy('k.handle', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage);
 
-        $result = $qb->getQuery()->execute();
-
-        if (false === is_array($result)) {
-            throw new \RuntimeException(
-                'Expected an array from the query for keys, got ' .
-                gettype($result),
-            );
-        }
-
-        return $result;
+        return new Paginator($qb);
     }
 }

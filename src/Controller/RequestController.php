@@ -151,8 +151,8 @@ class RequestController extends AbstractController
                 (is_object($user) ? get_class($user) : gettype($user)),
             );
         }
-        $page = $request->query->get('page', 1);
-        if (false === is_int($page) || $page < 1) {
+        $page = intval($request->query->get('page', 1));
+        if ($page < 1) {
             return $this->redirectToRoute('requests_list', ['page' => 1]);
         }
         $pageSize = 15;

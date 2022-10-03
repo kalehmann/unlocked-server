@@ -232,7 +232,13 @@ class KeyController extends AbstractController
         Request $request,
     ): Response {
         $searchKeyDto = new SearchKeyDto();
-        $searchForm = $this->createForm(SearchKeyType::class, $searchKeyDto);
+        $searchForm = $this->createForm(
+            SearchKeyType::class,
+            $searchKeyDto,
+            [
+                'allow_extra_fields' => true,
+            ],
+        );
         $searchForm->handleRequest($request);
         $user = $this->getUser();
         if (false === $user instanceof User) {
@@ -241,15 +247,33 @@ class KeyController extends AbstractController
                 (is_object($user) ? get_class($user) : gettype($user)),
             );
         }
+        $page = intval($request->query->get('page', 1));
+        if ($page < 1) {
+            return $this->redirectToRoute('keys_list', ['page' => 1]);
+        }
+        $pageSize = 15;
+        $keyPaginator = $keyRepository->searchPaginated(
+            $user,
+            $page,
+            $pageSize,
+            $searchKeyDto->query,
+            $searchKeyDto->showDeleted,
+        );
+        $pageCount = ceil(count($keyPaginator) / $pageSize);
+        if ($page > $pageCount) {
+            return $this->redirectToRoute('keys_list', ['page' => $pageCount]);
+        }
 
         return $this->render(
             'keys/list.html.twig',
             [
-                'keys' => $keyRepository->search(
-                    $user,
-                    $searchKeyDto->query,
-                    $searchKeyDto->showDeleted,
-                ),
+                'keys' => $keyPaginator,
+                'pagination' => [
+                    'page' => $page,
+                    'page_count' => $pageCount,
+                ],
+                'query' => $searchKeyDto->query,
+                'showDeleted' => $searchKeyDto->showDeleted,
                 'searchForm' => $searchForm->createView(),
             ],
         );

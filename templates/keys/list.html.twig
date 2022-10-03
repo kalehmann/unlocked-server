@@ -53,4 +53,14 @@
     {% endfor %}
   </tbody>
 </table>
+
+{% set baseUrl = path("keys_list") ~ "?" %}
+{% if query %}
+  {% set baseUrl = baseUrl ~ "query=" ~ query ~ "&" %}
+{% endif %}
+{% if showDeleted %}
+  {% set baseUrl = baseUrl ~ "showDeleted=1&" %}
+{% endif %}
+{{ include("components/pagination.html.twig") }}
+
 {% endblock %}
