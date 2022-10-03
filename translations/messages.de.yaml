@@ -11,6 +11,10 @@ client:
         handle: 'Handle'
         save: 'Speichern'
         secret: 'Geheimnis'
+        search:
+                query: 'Suchbegriff'
+                search: 'Suchen'
+                show_deleted: 'Zeige gelöschte Clienten'
 key:
         actions: 'Aktionen'
         add: 'Schlüssel hinzufügen'

@@ -26,11 +26,14 @@ namespace KaLehmann\UnlockedServer\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use KaLehmann\UnlockedServer\DTO\DeleteClientDto;
 use KaLehmann\UnlockedServer\DTO\EditClientDto;
+use KaLehmann\UnlockedServer\DTO\SearchClientDto;
 use KaLehmann\UnlockedServer\Form\Type\ConfirmClientDeletionType;
 use KaLehmann\UnlockedServer\Form\Type\DeleteClientType;
 use KaLehmann\UnlockedServer\Form\Type\EditClientType;
+use KaLehmann\UnlockedServer\Form\Type\SearchClientType;
 use KaLehmann\UnlockedServer\Mapping\ClientMapper;
 use KaLehmann\UnlockedServer\Model\Client;
+use KaLehmann\UnlockedServer\Model\User;
 use KaLehmann\UnlockedServer\Repository\ClientRepository;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -162,14 +165,54 @@ class ClientController extends AbstractController
 
     public function list(
         ClientRepository $clientRepository,
+        LoggerInterface $logger,
+        Request $request,
     ): Response {
+        $searchClientDto = new SearchClientDto();
+        $searchForm = $this->createForm(
+            SearchClientType::class,
+            $searchClientDto,
+            [
+                'allow_extra_fields' => true,
+            ],
+        );
+        $searchForm->handleRequest($request);
         $user = $this->getUser();
-        $clients = $clientRepository->findBy(['user' => $user]);
+        if (false === $user instanceof User) {
+            throw new \RuntimeException(
+                'Expected Controller::getUser() to return a User model, got ' .
+                (is_object($user) ? get_class($user) : gettype($user)),
+            );
+        }
+        $page = intval($request->query->get('page', 1));
+        if ($page < 1) {
+            return $this->redirectToRoute('clients_list', ['page' => 1]);
+        }
+        $pageSize = 15;
+        $clientPaginator = $clientRepository->searchPaginated(
+            $user,
+            $page,
+            $pageSize,
+            $searchClientDto->query,
+            $searchClientDto->showDeleted,
+        );
+        $pageCount = max(ceil(count($clientPaginator) / $pageSize), 1);
+        if ($page > $pageCount) {
+            return $this->redirectToRoute('clients_list', ['page' => $pageCount]);
+        }
+
 
         return $this->render(
             'clients/list.html.twig',
             [
-                'clients' => $clients,
+                'clients' => $clientPaginator,
+                'pagination' => [
+                    'page' => $page,
+                    'page_count' => $pageCount,
+                ],
+                'query' => $searchClientDto->query,
+                'showDeleted' => $searchClientDto->showDeleted,
+                'searchForm' => $searchForm->createView(),
             ],
         );
     }

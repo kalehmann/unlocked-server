@@ -158,7 +158,7 @@ class RequestController extends AbstractController
         $pageSize = 15;
         $requestsPaginator = $requestRepository->searchPaginated($user, $page, $pageSize);
         $totalRequests = count($requestsPaginator);
-        $pageCount = ceil($totalRequests / $pageSize);
+        $pageCount = max(ceil($totalRequests / $pageSize), 1);
         if ($page > $pageCount) {
             return $this->redirectToRoute('requests_list', ['page' => $pageCount]);
         }

@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use KaLehmann\UnlockedServer\Model\Client;
+use KaLehmann\UnlockedServer\Model\User;
 
 /**
  * @extends ServiceEntityRepository<Client>
@@ -35,5 +37,41 @@ class ClientRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Client::class);
+    }
+
+    /**
+     * @return Paginator<Client>
+     */
+    public function searchPaginated(
+        User $user,
+        int $page = 1,
+        int $perPage = 15,
+        ?string $query = null,
+        bool $showDeleted = false,
+    ): Paginator {
+        $offset = $perPage * ($page - 1);
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->where($qb->expr()->eq('c.user', ':user'))
+            ->setParameter(':user', $user);
+        if ($query) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('c.description', ':query'),
+                    $qb->expr()->like('c.handle', ':query'),
+                )
+            )->setParameter('query', '%' . $query . '%');
+        }
+        if (false === $showDeleted) {
+            $qb
+                ->andWhere($qb->expr()->eq('c.deleted', ':deleted'))
+                ->setParameter('deleted', false);
+        }
+        $qb
+            ->orderBy('c.handle', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage);
+
+        return new Paginator($qb);
     }
 }

@@ -259,7 +259,7 @@ class KeyController extends AbstractController
             $searchKeyDto->query,
             $searchKeyDto->showDeleted,
         );
-        $pageCount = ceil(count($keyPaginator) / $pageSize);
+        $pageCount = max(ceil(count($keyPaginator) / $pageSize), 1);
         if ($page > $pageCount) {
             return $this->redirectToRoute('keys_list', ['page' => $pageCount]);
         }

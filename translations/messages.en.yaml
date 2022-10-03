@@ -11,6 +11,10 @@ client:
         handle: 'Handle'
         save: 'Save'
         secret: 'Secret'
+        search:
+                query: 'Search term'
+                search: 'Search'
+                show_deleted: 'Show deleted clients'
 key:
         actions: 'Actions'
         add: 'Add key'
