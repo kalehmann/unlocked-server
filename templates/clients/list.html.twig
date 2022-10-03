@@ -28,10 +28,22 @@
       <td>{{ client.handle }}</td>
       <td>{{ client.description }}</td>
       <td>
-        <a
-          class="button"
-          href="{{ path('clients_edit', {"handle": client.handle}) }}"
-        >{% trans %}client.edit{% endtrans %}</a>
+        {% if client.deleted is same as(false) %}
+          <a
+            class="button inline"
+            href="{{ path('clients_edit', {"handle": client.handle}) }}"
+          >
+            <span class="icon-20 icon-edit"></span>
+            {% trans %}client.edit{% endtrans %}
+          </a>
+          <a
+            class="button inline"
+            href="{{ path('clients_confirm_deletion', {"handle": client.handle}) }}"
+          >
+            <span class="icon-20 icon-delete"></span>
+            {% trans %}client.delete{% endtrans %}
+          </a>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}

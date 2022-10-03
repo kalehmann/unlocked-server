@@ -12,6 +12,14 @@ api_request_show:
         path: '/api/requests/{id}'
         controller: 'KaLehmann\UnlockedServer\Controller\Api\RequestController::show'
         methods: 'GET'
+clients_confirm_deletion:
+        path: '/clients/delete/{handle}'
+        controller: 'KaLehmann\UnlockedServer\Controller\ClientController::confirmDeletion'
+        methods: 'GET'
+clients_delete:
+        path: '/clients/delete/{handle}'
+        controller: 'KaLehmann\UnlockedServer\Controller\ClientController::delete'
+        methods: 'POST'
 clients_edit:
         path: '/clients/edit/{handle}'
         controller: 'KaLehmann\UnlockedServer\Controller\ClientController::edit'

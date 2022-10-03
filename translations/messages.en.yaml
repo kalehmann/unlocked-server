@@ -1,6 +1,11 @@
 ---
 client:
         actions: 'Actions'
+        deletion:
+                accept: 'Confirm'
+                confirm: 'Do you really want to delete the client %handle%?'
+                deny: 'Deny'
+        delete: 'Delete'
         description: 'Description'
         edit: 'Edit'
         handle: 'Handle'

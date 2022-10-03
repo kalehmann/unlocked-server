@@ -24,20 +24,115 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use KaLehmann\UnlockedServer\DTO\DeleteClientDto;
 use KaLehmann\UnlockedServer\DTO\EditClientDto;
+use KaLehmann\UnlockedServer\Form\Type\ConfirmClientDeletionType;
+use KaLehmann\UnlockedServer\Form\Type\DeleteClientType;
 use KaLehmann\UnlockedServer\Form\Type\EditClientType;
 use KaLehmann\UnlockedServer\Mapping\ClientMapper;
 use KaLehmann\UnlockedServer\Model\Client;
 use KaLehmann\UnlockedServer\Repository\ClientRepository;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Form\ClickableInterface;
 
 class ClientController extends AbstractController
 {
+    public function confirmDeletion(
+        ClientMapper $clientMapper,
+        ClientRepository $clientRepository,
+        string $handle,
+    ): Response {
+        $client = $clientRepository->find($handle);
+        if (null === $client) {
+            throw new NotFoundHttpException();
+        }
+        if ($client->getUser() !== $this->getUser()) {
+            throw new BadRequestHttpException();
+        }
+        $deleteClientDto = new DeleteClientDto();
+        $clientMapper->mapModelToDeleteDto($client, $deleteClientDto);
+        $form = $this->createForm(ConfirmClientDeletionType::class, $deleteClientDto);
+
+        return $this->render(
+            'keys/delete.html.twig',
+            [
+                'confirmForm' => $form->createView(),
+                'handle' => $handle,
+            ],
+        );
+    }
+
+    public function delete(
+        ClientRepository $clientRepository,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        Request $request,
+        string $handle,
+    ): Response {
+        $deleteClientDto = new DeleteClientDto();
+        $form = $this->createForm(ConfirmClientDeletionType::class, $deleteClientDto);
+        $form->handleRequest($request);
+        $isSubmitted = $form->isSubmitted();
+        if (false === $isSubmitted || false === $form->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('clients_delete', ['handle' => $handle]) .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('clients_delete', ['handle' => $handle]) .
+                    '" but form was not submitted',
+                );
+            }
+
+            return $this->render(
+                'clients/delete.html.twig',
+                [
+                    'confirmForm' => $form->createView(),
+                    'handle' => $handle,
+                ],
+            );
+        }
+        if ($handle !== $deleteClientDto->handle) {
+            throw new BadRequestHttpException();
+        }
+        $client = $clientRepository->find($deleteClientDto->handle);
+        if (null === $client) {
+            throw new NotFoundHttpException();
+        }
+        if ($client->getUser() !== $this->getUser()) {
+            throw new BadRequestHttpException();
+        }
+        if ($client->isDeleted()) {
+            return $this->redirectToRoute('clients_list');
+        }
+
+        $confirmButton = $form->get('confirm');
+        if (false === $confirmButton instanceof ClickableInterface) {
+            throw new RuntimeException(
+                'Expected Button in the ConfirmClientDeletion form to implement ' .
+                'the ClickableInterface, got class "' .
+                get_class($confirmButton) . '" instead.',
+            );
+        }
+        if ($confirmButton->isClicked()) {
+            $client->delete();
+            $entityManager->persist($client);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('clients_list');
+    }
+
     public function edit(
         ClientMapper $clientMapper,
         ClientRepository $clientRepository,

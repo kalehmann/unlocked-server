@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Mapping;
 
+use KaLehmann\UnlockedServer\DTO\DeleteClientDto;
 use KaLehmann\UnlockedServer\DTO\EditClientDto;
 use KaLehmann\UnlockedServer\Model\Client;
 
@@ -36,6 +37,13 @@ class ClientMapper
         if ($dto->secret) {
             $client->setSecret($dto->secret);
         }
+    }
+
+    public function mapModelToDeleteDto(
+        Client $client,
+        DeleteClientDto $dto,
+    ): void {
+        $dto->handle = $client->getHandle();
     }
 
     public function mapModelToEditDto(
