@@ -66,6 +66,7 @@ class SearchKeyType extends AbstractType
                 [
                     'attr' => [
                         'class' => 'inline',
+                        'name' => false,
                     ],
                     'label' => 'key.search.search',
                 ],

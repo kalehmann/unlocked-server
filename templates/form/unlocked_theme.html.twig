@@ -24,8 +24,8 @@
   {{- form_widget(form) -}}
 {%- endblock button_row -%}
 
-{%- block button_attributes -%}
-    id="{{ id }}"{% if disabled %} disabled="disabled"{% endif -%}
+  {%- block button_attributes -%}
+    id="{{ id }}"{% if attr["name"] ?? true %} name="{{ full_name }}"{% endif %}{% if disabled %} disabled="disabled"{% endif -%}
     {{ block('attributes') }}
 {%- endblock button_attributes -%}
 
