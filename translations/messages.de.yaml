@@ -1,6 +1,8 @@
 ---
 client:
         actions: 'Aktionen'
+        add: 'Client hinzufügen'
+        create: 'Erstellen'
         deletion:
                 accept: 'Bestätigen'
                 confirm: 'Wollen Sie den Client %handle% wirklich löschen?'

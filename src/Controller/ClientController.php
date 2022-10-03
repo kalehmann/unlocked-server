@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use KaLehmann\UnlockedServer\DTO\CreateClientDto;
 use KaLehmann\UnlockedServer\DTO\DeleteClientDto;
 use KaLehmann\UnlockedServer\DTO\EditClientDto;
 use KaLehmann\UnlockedServer\DTO\SearchClientDto;
 use KaLehmann\UnlockedServer\Form\Type\ConfirmClientDeletionType;
+use KaLehmann\UnlockedServer\Form\Type\CreateClientType;
 use KaLehmann\UnlockedServer\Form\Type\DeleteClientType;
 use KaLehmann\UnlockedServer\Form\Type\EditClientType;
 use KaLehmann\UnlockedServer\Form\Type\SearchClientType;
@@ -46,6 +48,19 @@ use Symfony\Component\Form\ClickableInterface;
 
 class ClientController extends AbstractController
 {
+    public function add(): Response
+    {
+        $createClientDto = new CreateClientDto();
+        $createForm = $this->createForm(CreateClientType::class, $createClientDto);
+
+        return $this->render(
+            'clients/create.html.twig',
+            [
+                'createForm' => $createForm->createView(),
+            ],
+        );
+    }
+
     public function confirmDeletion(
         ClientMapper $clientMapper,
         ClientRepository $clientRepository,
@@ -69,6 +84,52 @@ class ClientController extends AbstractController
                 'handle' => $handle,
             ],
         );
+    }
+
+    public function create(
+        EntityManagerInterface $entityManager,
+        ClientMapper $clientMapper,
+        LoggerInterface $logger,
+        Request $request,
+    ): Response {
+        $createClientDto = new CreateClientDto();
+        $createForm = $this->createForm(CreateClientType::class, $createClientDto);
+        $createForm->handleRequest($request);
+        $isSubmitted = $createForm->isSubmitted();
+        if (false === $isSubmitted || false === $createForm->isValid()) {
+            if ($isSubmitted) {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('clients_create') .
+                    '" with invalid form',
+                );
+            } else {
+                $logger->warning(
+                    'Request to "' .
+                    $this->generateUrl('clients_create') .
+                    '" but form was not submitted',
+                );
+            }
+
+            return $this->render(
+                'clients/create.html.twig',
+                [
+                    'createForm' => $createForm->createView(),
+                ],
+            );
+        }
+        $user = $this->getUser();
+        if (false === $user instanceof User) {
+            throw new \RuntimeException(
+                'Expected Controller::getUser() to return a User model, got ' .
+                (is_object($user) ? get_class($user) : gettype($user)),
+            );
+        }
+        $client = $clientMapper->createModelFromCreateDto($createClientDto, $user);
+        $entityManager->persist($client);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('clients_list');
     }
 
     public function delete(

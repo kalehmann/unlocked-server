@@ -1,6 +1,8 @@
 ---
 client:
         actions: 'Actions'
+        add: 'Add client'
+        create: 'Create'
         deletion:
                 accept: 'Confirm'
                 confirm: 'Do you really want to delete the client %handle%?'

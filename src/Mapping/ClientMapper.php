@@ -23,12 +23,24 @@ declare(strict_types=1);
 
 namespace KaLehmann\UnlockedServer\Mapping;
 
+use KaLehmann\UnlockedServer\DTO\CreateClientDto;
 use KaLehmann\UnlockedServer\DTO\DeleteClientDto;
 use KaLehmann\UnlockedServer\DTO\EditClientDto;
 use KaLehmann\UnlockedServer\Model\Client;
+use KaLehmann\UnlockedServer\Model\User;
 
 class ClientMapper
 {
+    public function createModelFromCreateDto(
+        CreateClientDto $dto,
+        User $user,
+    ): Client {
+        $client = new Client($dto->handle, $dto->secret, $user);
+        $client->setDescription($dto->description);
+
+        return $client;
+    }
+
     public function mapEditDtoToModel(
         EditClientDto $dto,
         Client $client,
