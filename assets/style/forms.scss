@@ -106,14 +106,18 @@ label {
     }
 }
 
+@mixin inline-button {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    margin: .5rem;
+    width: auto;
+}
+
 @include for-desktop-up {
     .button, button, input {
 	&.inline {
-	    align-items: center;
-	    display: inline-flex;
-	    justify-content: center;
-	    margin: .5rem;
-	    width: auto;
+	    @include inline-button;
 	}
     }
 

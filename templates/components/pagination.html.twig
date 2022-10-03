@@ -1,0 +1,28 @@
+<nav class="pagination">
+  {%- set lastPage = pagination.page_count -%}
+  {%- set nextPage = pagination.page + 1 -%}
+  {%- set prevPage = pagination.page - 1 -%}
+  {%- if pagination.page > 1 -%}
+    {%- if pagination.page < 5 -%}
+      {%- for i in range(1, prevPage) -%}
+        <a href="{{ baseUrl }}page={{ i }}">{{ i }}</a>
+      {%- endfor -%}
+    {%- else -%}
+      <a href="{{ baseUrl }}page=1">1</a>
+      <span>...</span>
+      <a href="{{ baseUrl }}page={{ prevPage }}">{{ prevPage }}</a>
+    {%- endif -%}
+  {%- endif -%}
+  <span>{{ pagination.page }}</span>
+  {%- if pagination.page < lastPage -%}
+    {%- if lastPage - pagination.page < 4 -%}
+      {%- for i in range(pagination.page + 1, lastPage) -%}
+        <a href="{{ baseUrl }}page={{ i }}">{{ i }}</a>
+      {%- endfor -%}
+    {%- else -%}
+      <a href="{{ baseUrl }}page={{ nextPage }}">{{ nextPage }}</a>
+      <span>...</span>
+      <a href="{{ baseUrl }}page={{ lastPage }}">{{ lastPage }}</a>
+    {%- endif -%}
+  {%- endif -%}
+</nav>

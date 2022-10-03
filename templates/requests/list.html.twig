@@ -84,4 +84,8 @@
     {% endfor %}
   </tbody>
 </table>
+
+{% set baseUrl = path("requests_list") ~ "?" %}
+{{ include("components/pagination.html.twig") }}
+
 {% endblock %}

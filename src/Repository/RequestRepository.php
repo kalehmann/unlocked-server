@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace KaLehmann\UnlockedServer\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use KaLehmann\UnlockedServer\Model\Request;
+use KaLehmann\UnlockedServer\Model\User;
 
 /**
  * @extends ServiceEntityRepository<Request>
@@ -35,5 +37,23 @@ class RequestRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Request::class);
+    }
+
+    /**
+     * @return Paginator<Request>
+     */
+    public function searchPaginated(
+        User $user,
+        int $page = 1,
+        int $perPage = 15,
+    ): Paginator {
+        $offset = $perPage * ($page - 1);
+        $qb = $this->createQueryBuilder('r');
+        $qb
+            ->orderBy('r.created', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage);
+
+        return new Paginator($qb);
     }
 }

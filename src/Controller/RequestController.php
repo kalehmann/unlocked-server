@@ -26,6 +26,7 @@ namespace KaLehmann\UnlockedServer\Controller;
 use KaLehmann\UnlockedServer\Form\Type\AcceptRequestType;
 use KaLehmann\UnlockedServer\Form\Type\DenyRequestType;
 use KaLehmann\UnlockedServer\Model\Request as RequestModel;
+use KaLehmann\UnlockedServer\Model\User;
 use KaLehmann\UnlockedServer\Repository\RequestRepository;
 use KaLehmann\UnlockedServer\Service\RequestService;
 use Psr\Log\LoggerInterface;
@@ -140,17 +141,27 @@ class RequestController extends AbstractController
     }
 
     public function list(
+        Request $request,
         RequestRepository $requestRepository,
     ): Response {
         $user = $this->getUser();
-        $requests = $requestRepository->findBy(
-            [
-                'user' => $user,
-            ],
-            [
-                'created' => 'DESC'
-            ],
-        );
+        if (false === $user instanceof User) {
+            throw new \RuntimeException(
+                'Expected Controller::getUser() to return a User model, got ' .
+                (is_object($user) ? get_class($user) : gettype($user)),
+            );
+        }
+        $page = $request->query->get('page', 1);
+        if (false === is_int($page) || $page < 1) {
+            return $this->redirectToRoute('requests_list', ['page' => 1]);
+        }
+        $pageSize = 15;
+        $requestsPaginator = $requestRepository->searchPaginated($user, $page, $pageSize);
+        $totalRequests = count($requestsPaginator);
+        $pageCount = ceil($totalRequests / $pageSize);
+        if ($page > $pageCount) {
+            return $this->redirectToRoute('requests_list', ['page' => $pageCount]);
+        }
         $requests = array_map(
             function (RequestModel $request): array {
                 $data = [
@@ -168,13 +179,18 @@ class RequestController extends AbstractController
                 }
                 return $data;
             },
-            $requests
+            iterator_to_array($requestsPaginator),
         );
 
         return $this->render(
             'requests/list.html.twig',
             [
                 'requests' => $requests,
+                'pagination' => [
+                    'total' => $totalRequests,
+                    'page' => $page,
+                    'page_count' => $pageCount,
+                ],
             ],
         );
     }

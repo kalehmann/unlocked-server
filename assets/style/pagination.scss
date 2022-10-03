@@ -1,0 +1,13 @@
+@import './forms';
+
+nav.pagination {
+    & > a {
+	@extend .button;
+	@include inline-button;
+    }
+    & > span {
+	font-size: 1.5rem;
+	font-weight: bolder;
+	padding: .5rem;
+    }
+}
