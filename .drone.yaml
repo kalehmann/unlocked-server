@@ -61,6 +61,18 @@ steps:
                   - "composer install --no-dev --classmap-authoritative"
           depends_on:
                   - "Setup project and permissions"
+        - name: "Install the NPM dependencies"
+          image: "node:18-alpine"
+          commands:
+                  - "yarn install"
+          depends_on:
+                  - "Setup project and permissions"
+        - name: "Build assets"
+          image: "node:18-alpine"
+          commands:
+                  - "yarn run webpack --mode=production"
+          depends_on:
+                  - "Install the NPM dependencies"
         - name: "Deploy the website"
           image: "registry.kalehmann.de/lftp:latest"
           commands:
@@ -84,6 +96,7 @@ steps:
                       exit;"'
           depends_on:
                   - "Install the PHP dependencies"
+                  - "Build assets"
           environment:
                   USER:
                           from_secret: "ftp_user"
