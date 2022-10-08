@@ -6,16 +6,17 @@ workspace:
         path: "/application"
 
 steps:
-        - name: "Fix permissions"
+        - name: "Setup project and permissions"
           image: "registry.kalehmann.de/bash:latest"
           commands:
                   - "chmod -R 777 ."
+                  - "echo \"DB_PATH=var/db.sqlite\" > .env"
         - name: "Install the PHP dependencies"
           image: "registry.kalehmann.de/testing/unlocked-server:latest"
           commands:
                   - "composer install"
           depends_on:
-                  - "Fix permissions"
+                  - "Setup project and permissions"
         - name: "Static analysis of PHP code"
           image: "registry.kalehmann.de/testing/unlocked-server:latest"
           commands:
@@ -46,20 +47,23 @@ workspace:
         path: "/application"
 
 steps:
-        - name: "Fix permissions"
+        - name: "Setup project and permissions"
           image: "registry.kalehmann.de/bash:latest"
           commands:
+                  - 'echo "$${ENV_FILE}" | tr " " "\n" > .env'
                   - "chmod -R 777 ."
+          environment:
+                  ENV_FILE:
+                          from_secret: "env_file"
         - name: "Install the PHP dependencies"
           image: "registry.kalehmann.de/testing/unlocked-server:latest"
           commands:
                   - "composer install --no-dev --classmap-authoritative"
           depends_on:
-                  - "Fix permissions"
+                  - "Setup project and permissions"
         - name: "Deploy the website"
           image: "registry.kalehmann.de/lftp:latest"
           commands:
-                  - 'echo "$${ENV_FILE}" | tr " " "\n" > .env'
                   - 'lftp -e "
                       set ftp:ssl-force true;
                       set ssl:verify-certificate yes;
@@ -81,8 +85,6 @@ steps:
           depends_on:
                   - "Install the PHP dependencies"
           environment:
-                  ENV_FILE:
-                          from_secret: "env_file"
                   USER:
                           from_secret: "ftp_user"
                   PASSWORD:
