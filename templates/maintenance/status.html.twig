@@ -27,6 +27,11 @@
   <div class="messagebox success">
     {% trans %}maintenance.database.up_to_date{% endtrans %}
   </div>
+      {% if not userExists %}
+  <div class="messagebox danger">
+    {% trans %}maintenance.database.no_users{% endtrans %}
+  </div>
+      {% endif %}
     {% endif %}
   {% else %}
   <div class="messagebox danger">

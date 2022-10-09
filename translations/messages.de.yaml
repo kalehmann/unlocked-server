@@ -45,6 +45,7 @@ maintenance:
                 exists: 'Databank ist vorhanden'
                 missing: 'Databank ist nicht vorhanden'
                 new_migrations: 'Es wurden neue Migrationen gefunden'
+                no_users: 'Es existiert noch kein Benutzer'
                 run_migrations: 'Migrationen ausführen'
                 up_to_date: 'Die Datenbank ist aktuell'
                 unregistered_migrations: >-

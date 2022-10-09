@@ -25,6 +25,7 @@ namespace KaLehmann\UnlockedServer\Controller;
 
 use KaLehmann\UnlockedServer\Form\Type\BuildDatabaseType;
 use KaLehmann\UnlockedServer\Form\Type\RunMigrationsType;
+use KaLehmann\UnlockedServer\Repository\UserRepository;
 use KaLehmann\UnlockedServer\Service\ListDatabasesService;
 use KaLehmann\UnlockedServer\Service\MigrationStatusService;
 use Psr\Log\LoggerInterface;
@@ -135,6 +136,7 @@ class MaintenanceController
         ListDatabasesService $listDatabasesService,
         MigrationStatusService $migrationStatusService,
         Environment $twig,
+        UserRepository $userRepository,
     ): Response {
         $databaseExists = in_array(
             $listDatabasesService->getDefaultDatabaseName(),
@@ -147,6 +149,10 @@ class MaintenanceController
                 ->unregisteredMigrationsDetected();
             $schemaUpToDate = $migrationStatusService
                 ->schemaUpToDate();
+        }
+        $userExists = false;
+        if ($schemaUpToDate) {
+            $userExists = $userRepository->count([]) > 0;
         }
 
         $createDbForm = $formFactory
@@ -191,6 +197,7 @@ class MaintenanceController
                     'phpVersionSufficient' => $phpVersionSufficient,
                     'schemaUpToDate' => $schemaUpToDate,
                     'unregisteredMigrations' => $unregisteredMigrations,
+                    'userExists' => $userExists,
                     'createDbForm' => $createDbForm,
                     'migrationsForm' => $migrationsForm,
                 ],
