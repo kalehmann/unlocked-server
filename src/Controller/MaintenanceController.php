@@ -26,7 +26,7 @@ namespace KaLehmann\UnlockedServer\Controller;
 use KaLehmann\UnlockedServer\Form\Type\BuildDatabaseType;
 use KaLehmann\UnlockedServer\Form\Type\RunMigrationsType;
 use KaLehmann\UnlockedServer\Repository\UserRepository;
-use KaLehmann\UnlockedServer\Service\ListDatabasesService;
+use KaLehmann\UnlockedServer\Service\MaintenanceService;
 use KaLehmann\UnlockedServer\Service\MigrationStatusService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -133,15 +133,11 @@ class MaintenanceController
 
     public function status(
         FormFactoryInterface $formFactory,
-        ListDatabasesService $listDatabasesService,
+        MaintenanceService $maintenanceService,
         MigrationStatusService $migrationStatusService,
         Environment $twig,
-        UserRepository $userRepository,
     ): Response {
-        $databaseExists = in_array(
-            $listDatabasesService->getDefaultDatabaseName(),
-            $listDatabasesService->getDatabases(),
-        );
+        $databaseExists = $maintenanceService->databaseExists();
         $unregisteredMigrations = false;
         $schemaUpToDate = false;
         if ($databaseExists) {
@@ -152,7 +148,7 @@ class MaintenanceController
         }
         $userExists = false;
         if ($schemaUpToDate) {
-            $userExists = $userRepository->count([]) > 0;
+            $userExists = $maintenanceService->hasUser();
         }
 
         $createDbForm = $formFactory
@@ -162,37 +158,15 @@ class MaintenanceController
               ->create(RunMigrationsType::class)
               ->createView();
 
-        $extensions = [];
-        foreach (get_loaded_extensions() as $name) {
-            $extensions[$name] = [
-                'name' => $name,
-                'installed' => phpversion($name),
-                'required' => false,
-            ];
-        }
-        $requiredExtensions = [
-            'tokenizer',
-            'xml',
-            'xmlwriter',
-        ];
-        foreach ($requiredExtensions as $name) {
-            $ext = $extensions[$name] ?? [
-                'name' => $name,
-                'installed' => false,
-                'required' => false,
-            ];
-            $ext['required'] = true;
-            $extensions[$name] = $ext;
-        }
         $phpVersion = phpversion();
-        $phpVersionSufficient = version_compare($phpVersion, '8.0.0', '>=');
+        $phpVersionSufficient = version_compare($phpVersion, '8.1.0', '>=');
 
         return new Response(
             $twig->render(
                 'maintenance/status.html.twig',
                 [
                     'dbExists' => $databaseExists,
-                    'extensions' => $extensions,
+                    'extensions' => $maintenanceService->getExtensionStatus(),
                     'phpVersion' => $phpVersion,
                     'phpVersionSufficient' => $phpVersionSufficient,
                     'schemaUpToDate' => $schemaUpToDate,
