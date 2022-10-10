@@ -29,7 +29,15 @@
   </div>
       {% if not userExists %}
   <div class="messagebox danger">
-    {% trans %}maintenance.database.no_users{% endtrans %}
+    {% trans %}maintenance.user.no_users{% endtrans %}
+  </div>
+
+  <a class="button" href="{{ path('maintenance_add_user') }}">
+    {% trans %}maintenance.user.add{% endtrans %}
+  <a/>
+      {% else %}
+  <div class="messagebox success">
+    {% trans %}maintenance.user.exists{% endtrans %}
   </div>
       {% endif %}
     {% endif %}

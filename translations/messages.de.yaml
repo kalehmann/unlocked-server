@@ -45,7 +45,6 @@ maintenance:
                 exists: 'Databank ist vorhanden'
                 missing: 'Databank ist nicht vorhanden'
                 new_migrations: 'Es wurden neue Migrationen gefunden'
-                no_users: 'Es existiert noch kein Benutzer'
                 run_migrations: 'Migrationen ausführen'
                 up_to_date: 'Die Datenbank ist aktuell'
                 unregistered_migrations: >-
@@ -60,6 +59,10 @@ maintenance:
                 info: 'Server Informationen'
                 php_version: 'PHP Version'
                 php_version_error: 'Nicht unterstützte PHP Version'
+        user:
+                add: 'Erstelle einen neuen Benutzer'
+                exists: 'Es existiert mindestens ein Benutzer'
+                no_users: 'Es existiert noch kein Benutzer'
 request:
         accept: 'Genehmigen'
         actions: 'Aktionen'
@@ -77,4 +80,10 @@ unlocked:
         request: 'Anfragen'
         user: 'Nutzer'
         title: 'UИLOCKED'
+user:
+        create: 'Erstellen'
+        email: 'E-Mail Adresse'
+        handle: 'Handle'
+        mobile: 'Telefonnummer'
+        password: 'Passwort'
 ...

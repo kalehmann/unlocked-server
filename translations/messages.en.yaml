@@ -45,7 +45,6 @@ maintenance:
                 exists: 'Database exists'
                 missing: 'Database does not exist'
                 new_migrations: 'New migrations where detected'
-                no_users: 'There is no user yet'
                 run_migrations: 'Run migrations'
                 up_to_date: 'The database is up to date'
                 unregistered_migrations: >-
@@ -60,6 +59,10 @@ maintenance:
                 info: 'Server information'
                 php_version: 'PHP version'
                 php_version_error: 'Unsupported PHP version'
+        user:
+                add: 'Add a new user'
+                exists: 'There is at least one user'
+                no_users: 'There is no user yet'
 request:
         accept: 'Accept'
         actions: 'Actions'
@@ -77,4 +80,10 @@ unlocked:
         request: 'Requests'
         user: 'User'
         title: 'UИLOCKED'
+user:
+        create: 'Create'
+        email: 'E-Mail address'
+        handle: 'Handle'
+        mobile: 'Mobile number'
+        password: 'Password'
 ...

@@ -77,6 +77,14 @@ keys_save:
         path: '/keys/edit/{handle}'
         controller: 'KaLehmann\UnlockedServer\Controller\KeyController::save'
         methods: 'POST'
+maintenance_add_user:
+        path: '/maintenance/user'
+        controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::addUser'
+        methods: 'GET'
+maintenance_create_user:
+        path: '/maintenance/user'
+        controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::createUser'
+        methods: 'POST'
 maintenance_init_db:
         path: '/maintenance/init_db'
         controller: 'KaLehmann\UnlockedServer\Controller\MaintenanceController::initDb'
